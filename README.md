@@ -1,5 +1,5 @@
 # Getting Started
-The PostGIS HTTP API is a dirt-simple way to expose geospatial functionality to your applications. It takes simple requests over HTTP (GET or POST) and returns JSON or JSONP to the requestor. Although the focus of the project has generally been on exposing PostGIS functionality to web apps, you can use the framework to connect to any PHP PDO supported database (read: just about anything).
+The Dirt-Simple PostGIS HTTP API is an easy way to expose geospatial functionality to your applications. It takes simple requests over HTTP (GET or POST) and returns JSON or JSONP to the requester. Although the focus of the project has generally been on exposing PostGIS functionality to web apps, you can use the framework to connect to any PHP PDO supported database (read: just about anything).
 
 ## Setup
 #### Step 1 - PostgreSQL and PostGIS
@@ -27,7 +27,7 @@ The next step is to tell the framework how to connect to your database(s). All d
     }
 
 <div class="warning alert alert-error">
-  <strong>Warning!</strong> Make sure you use a read-only login that only has access to resources you want to share. Because users pass table/view names, a crafty hacker could eat your lunch with admin access.
+  <strong>Warning!</strong> Make sure you use a read-only login that only has access to resources you want to share. Because users pass information that can't be easily escaped, a crafty hacker could eat your lunch with admin access.
 </div>
 
 Now you're ready to go!
@@ -79,12 +79,12 @@ You can consume the services via any server-side language you like. Here we'll u
 ## Tips
 * Know your SRID's. The most common one would be WGS84 - `4326` - for lat/lng. `2264` is North Carolina State Plane NAD83 Feet for you North Carolina USA types.
 * Most of the services are schema-agnostic. Two notable exceptions: `Ubersearch` and `Road Intersection`. You'll have to monkey with those to match your table schema up.
-* If you want to modify the inputs or outpus of a service, put it in v2 (or whatever the next folder is) and update the docs to point to it. That way you're not breaking your user's stuff. Unless you just like to irritate people.
+* If you want to modify the inputs or outputs of a service, put it in v2 (or whatever the next folder is) and update the docs to point to it. That way you're not breaking your user's stuff. Unless you just like to irritate people.
 * You can rename fields in the return, ala `fields=precno as precinct_number`.
 * If you know you're only getting 1 record back, it is still coming back as an array. In JavaScript use `data[0]` to grab the first sucker without looping.
 * To get a count on your return in JavaScript (or to make sure it isn't empty), use `data.length`.
 * You can leverage PostGIS functions to get goodies back, like `fields=st_asgeojson(the_geom) as geojson`.
-* If you need to do something like pull geoJSON back in a return field like above, use something like `jQuery.parseJSON(the_json_value)` to set it propoer.
+* If you need to do something like pull geoJSON back in a return field like above, use something like `jQuery.parseJSON(the_json_value)` to set it proper.
 * URL encode stuff that is going out in an argument to be safe. For example, the `parameter` argument can have `=` and `'` and similar nonsense. Here's some JavaScript functions to properly URL encode/decode a string (JavaScript's escape doesn't cover everything).
 
 #### JavaScript

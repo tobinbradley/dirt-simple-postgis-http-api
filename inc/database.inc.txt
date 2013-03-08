@@ -1,0 +1,12 @@
+<?php
+/*
+    Database Connections
+*/
+
+// Return database connection
+function pgConnection() {
+	$conn = new PDO ("pgsql:host=server_name;dbname=database_name;port=5432","user_name","password", array(PDO::ATTR_PERSISTENT => true));
+    return $conn;
+}
+
+?>

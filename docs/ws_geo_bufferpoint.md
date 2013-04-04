@@ -1,5 +1,5 @@
 # Buffer Point
-[Service URL](v1/ws_geo_bufferpoint.php) | 
+[Service URL](v1/ws_geo_bufferpoint.php) |
 [Demo URL](v1/ws_geo_bufferpoint.php?x=1440901&y=479406&srid=2264&distance=20000&table=schools&fields=type,schlname,address&limit=3)
 
 ### Description
@@ -45,6 +45,10 @@ Buffer an XY coordinate by a specified distance and return selected features.
         <tr class="success">
             <td>parameters</td>
             <td>SQL where parameters to narrow down the return. The default is <strong>no parameters</strong>.</td>
+        </tr>
+        <tr class="success">
+            <td>order</td>
+            <td>A field or fields to sort the return by. The default is <strong>distance</strong>.</td>
         </tr>
         <tr class="success">
             <td>limit</td>

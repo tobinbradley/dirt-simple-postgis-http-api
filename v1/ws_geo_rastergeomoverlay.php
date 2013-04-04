@@ -30,7 +30,7 @@ $sql = " SELECT (gv).val as value, sum(st_area((gv).geom)) as area, sum(st_area(
 		st_geomfromewkt('" . $wkt . "') && rast
 		and ST_Intersects(rast, st_geomfromewkt('" . $wkt . "')) )
 		foo group by value order by value ";
-$db = pgConnection2();
+$db = pgConnection();
 $statement=$db->prepare( $sql );
 $statement->execute();
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);

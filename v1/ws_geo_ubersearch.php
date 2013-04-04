@@ -113,6 +113,9 @@ else {
 
 }
 
+// order return by type if more than 1 type requested
+if (count($requestTypes) > 1) $sql .= " order by type";
+
 $like = "%" . $query . "%";
 $db = pgConnection();
 $statement=$db->prepare( $sql );

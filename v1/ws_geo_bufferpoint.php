@@ -26,12 +26,14 @@ $geometryfield = isset($_REQUEST['geometryfield']) ? $_REQUEST['geometryfield'] 
 $fields = isset($_REQUEST['fields']) ? $_REQUEST['fields'] : "*";
 $parameters = isset($_REQUEST['parameters']) ? " and " . $_REQUEST['parameters'] : "";
 $limit = isset($_REQUEST['limit']) ? " limit " . $_REQUEST['limit'] : '';
+$order = isset($_REQUEST['order']) ? " order by " . $_REQUEST['order'] : ' order by distance ';
 
 # Perform the query
 $sql = "SELECT " . $fields . ",
 ST_Distance(ST_GeomFromText('POINT(" . $x . " " . $y . ")'," . $srid ."),ST_transform(a." . $geometryfield . ",".$srid.")) as distance
 FROM " . $table . " a WHERE ST_DWithin(ST_transform(a.". $geometryfield . ",".$srid."),
-ST_GeomFromText('POINT(" . $x . " " . $y . ")'," . $srid . "), " . $distance .  ") " . $parameters . " order by distance " . $limit;
+ST_GeomFromText('POINT(" . $x . " " . $y . ")'," . $srid . "), " . $distance .  ") " . $parameters . $order . $limit;
+
 $db = pgConnection();
 $statement=$db->prepare( $sql );
 $statement->execute();

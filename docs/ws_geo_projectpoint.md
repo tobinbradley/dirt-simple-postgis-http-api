@@ -27,7 +27,7 @@ Project coordinates (XY) from one SRID to another.
             <td>The SRID of the coordinate being passed.</td>
         </tr>
          <tr class="success">
-            <td>srid</td>
+            <td>tosrid</td>
             <td>The SRID for the intersection point. The default is <strong>4326</strong> WGS84 Lat/Lng.</td>
         </tr>
     </tbody>

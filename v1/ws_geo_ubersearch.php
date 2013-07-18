@@ -31,7 +31,7 @@ if ( is_numeric($_REQUEST['query']) ) {
     # Parcel ID
     if (is_numeric($query) and in_array("pid", $requestTypes) and strlen($query) == 8) {  // probably a parcel id
         if (strlen($sql) > 0) $sql .= " union all ";
-        $sql .= "(select objectid as gid, num_parent_parcel as name, 'PID' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat from master_address_table where num_parent_parcel = :query and num_x_coord > 0 and cde_status='A' order by name)";
+        $sql .= "(select objectid as gid, num_parent_parcel as name, 'PID' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat, full_address as moreinfo, 1 as score from master_address_table where num_parent_parcel = :query and num_x_coord > 0 and cde_status='A' order by name)";
     }
 }
 
@@ -40,7 +40,7 @@ else {
     # Address
     if (is_numeric($query_array[0]) and !is_numeric($query) and in_array("address", $requestTypes)) {
         if (strlen($sql) > 0) $sql .= " union ";
-        $sql .= "(select objectid as gid, full_address as name, 'ADDRESS' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat from master_address_table where txt_street_number = :housenum and soundex(substring(full_address from 1 for "  . strlen($query)  . " )) = soundex(:query) and cde_status='A' and num_x_coord > 0 ORDER BY similarity(substring(full_address from 1 for "  . strlen($query)  . "), :query2) DESC limit 50)";
+        $sql .= "(select objectid as gid, full_address as name, 'ADDRESS' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat, num_parent_parcel as moreinfo, similarity(substring(full_address from 1 for "  . strlen($query)  . "), :query2) as score from master_address_table where txt_street_number = :housenum and soundex(substring(full_address from 1 for "  . strlen($query)  . " )) = soundex(:query) and cde_status='A' and num_x_coord > 0 ORDER BY score DESC limit 50)";
     }
 
 
@@ -48,31 +48,31 @@ else {
     # Parks
     if (in_array("park", $requestTypes)) {
         if (strlen($sql) > 0) $sql .= " union ";
-        $sql .= "(select gid, prkname as name, 'PARKS' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat from parks where prkname ilike :like order by name limit 50)";
+        $sql .= "(select gid, prkname as name, 'PARKS' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat, '' as moreinfo, 1 as score from parks where prkname ilike :like order by name limit 50)";
     }
 
     # Libraries
     if (in_array("library", $requestTypes)) {
         if (strlen($sql) > 0) $sql .= " union ";
-        $sql .= "(select gid, name, 'LIBRARIES' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat from libraries where name ilike :like order by name limit 50)";
+        $sql .= "(select gid, name, 'LIBRARIES' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat, '' as moreinfo, 1 as score from libraries where name ilike :like order by name limit 50)";
     }
 
     # Schools
     if (in_array("school", $requestTypes)) {
         if (strlen($sql) > 0) $sql .= " union ";
-        $sql .= "(select gid, schlname as name, 'SCHOOLS' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat from schools_1112 where schlname ilike :like order by name limit 50)";
+        $sql .= "(select gid, schlname as name, 'SCHOOLS' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat, '' as moreinfo, 1 as score from schools_1112 where schlname ilike :like order by name limit 50)";
     }
 
     # NSA
     if (in_array("nsa", $requestTypes)) {
         if (strlen($sql) > 0) $sql .= " union ";
-        $sql .= "(select gid, nsa_name as name, 'NSA' as type, round(ST_X(ST_Transform(ST_Centroid(the_geom), 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(ST_Centroid(the_geom), 4326))::NUMERIC,4) as lat from neighborhood_statistical_areas where nsa_name ilike :like order by name limit 50)";
+        $sql .= "(select gid, nsa_name as name, 'NSA' as type, round(ST_X(ST_Transform(ST_Centroid(the_geom), 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(ST_Centroid(the_geom), 4326))::NUMERIC,4) as lat, '' as moreinfo, 1 as score from neighborhood_statistical_areas where nsa_name ilike :like order by name limit 50)";
     }
 
     # GeoNames
     if (in_array("geoname", $requestTypes)) {
         if (strlen($sql) > 0) $sql .= " union ";
-        $sql .= "(select gid, name, 'GEONAMES' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat from geonames where name ilike :like order by name limit 50)";
+        $sql .= "(select gid, name, 'GEONAMES' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat, '' as moreinfo, 1 as score from geonames where name ilike :like order by name limit 50)";
     }
 
     # Roads
@@ -81,7 +81,9 @@ else {
         $sql .= "(select
             9 as gid, streetname as name, 'ROAD' as type,
             round(ST_X(ST_transform(ST_PointOnSurface(the_geom), 4326))::NUMERIC,4) as lng,
-            round(ST_Y(ST_transform(ST_PointOnSurface(the_geom), 4326))::NUMERIC,4) as lat
+            round(ST_Y(ST_transform(ST_PointOnSurface(the_geom), 4326))::NUMERIC,4) as lat,
+            '' as moreinfo,
+            1 as score
             from roads
             where streetname = :query
             order by ll_add limit 1)";
@@ -90,15 +92,17 @@ else {
     # Businesses
     if (in_array("business", $requestTypes)) {
         if (strlen($sql) > 0) $sql .= " union ";
-        $sql .= "(select gid, company || ': ' || address as name, 'BUSINESS' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat from businesswise_businesses where company ilike :like order by name limit 50)";
+        $sql .= "(select gid, company || ': ' || address as name, 'BUSINESS' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat, '' as moreinfo,
+            1 as score
+            from businesswise_businesses where company ilike :like order by name limit 50)";
     }
 
     # CATS
     if (in_array("cats", $requestTypes)) {
         if (strlen($sql) > 0) $sql .= " union ";
-        $sql .= "(select gid, name, 'CATS LIGHT RAIL' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat from cats_light_rail_stations where name ilike :like order by name)";
+        $sql .= "(select gid, name, 'CATS LIGHT RAIL' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat, '' as moreinfo, 1 as score from cats_light_rail_stations where name ilike :like order by name)";
         $sql .= " union ";
-        $sql .= "(select gid, name, 'CATS PARK AND RIDE' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat from cats_park_and_ride where name ilike :like order by name limit 50)";
+        $sql .= "(select gid, name, 'CATS PARK AND RIDE' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat, '' as moreinfo, 1 as score from cats_park_and_ride where name ilike :like order by name limit 50)";
     }
 
     # Intersection
@@ -108,13 +112,13 @@ else {
         $secondStreet = '%' . trim(substr($query,$pos + 1, strlen($query) - $pos)) . '%';
 
         if (strlen($sql) > 0) $sql .= " union ";
-        $sql .= "(select distinct 9 as gid, a.streetname || ' & ' || b.streetname as name, 'INTERSECTION' as type, round(ST_X(ST_Transform(ST_Intersection( a.the_geom, b.the_geom),4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(ST_Intersection( a.the_geom, b.the_geom),4326))::NUMERIC,4) as lat from (select streetname, the_geom from roads where streetname ilike :firststreet ) a, (select streetname,the_geom from roads where streetname ilike :secondstreet) b where a.the_geom && b.the_geom and intersects(a.the_geom, b.the_geom) and b.streetname not ilike :firststreet limit 50)";
+        $sql .= "(select distinct 9 as gid, a.streetname || ' & ' || b.streetname as name, 'INTERSECTION' as type, round(ST_X(ST_Transform(ST_Intersection( a.the_geom, b.the_geom),4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(ST_Intersection( a.the_geom, b.the_geom),4326))::NUMERIC,4) as lat, '' as moreinfo, 1 as score from (select streetname, the_geom from roads where streetname ilike :firststreet ) a, (select streetname,the_geom from roads where streetname ilike :secondstreet) b where a.the_geom && b.the_geom and intersects(a.the_geom, b.the_geom) and b.streetname not ilike :firststreet limit 50)";
     }
 
 }
 
 // order return by type if more than 1 type requested
-if (count($requestTypes) > 1) $sql .= " order by type";
+if (strstr($sql, ' union ')) $sql .= " order by type asc, score desc, name asc";
 
 $like = "%" . $query . "%";
 $db = pgConnection();
@@ -129,6 +133,7 @@ $statement->execute();
 $result=$statement->fetchAll(PDO::FETCH_ASSOC);
 
 # send return
+if (isset($_REQUEST['debug'])) $result = array_merge($result, array("sql" => $sql));
 $json= json_encode( $result );
 echo isset($_GET['callback']) ? "{$_GET['callback']}($json)" : $json;
 

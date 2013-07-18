@@ -50,6 +50,10 @@ Do an intersection on a table using a point coordinate.
             <td>parameters</td>
             <td>SQL where parameters to narrow down the return. The default is <strong>no parameters</strong>.</td>
         </tr>
+         <tr class="success">
+            <td>order</td>
+            <td>Return sorting. The default is <strong>no sorting</strong>.</td>
+        </tr>
         <tr class="success">
             <td>limit</td>
             <td>Limit the number of features returned. The default is <strong>no limit</strong>.</td>

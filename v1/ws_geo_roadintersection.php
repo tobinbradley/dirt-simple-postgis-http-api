@@ -37,6 +37,7 @@ $statement->execute();
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 # send return
+if (isset($_REQUEST['debug'])) $result = array_merge($result, array("sql" => $sql));
 $json= json_encode( $result );
 echo isset($_GET['callback']) ? "{$_GET['callback']}($json)" : $json;
 

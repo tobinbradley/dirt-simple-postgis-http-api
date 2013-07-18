@@ -38,6 +38,10 @@ Buffer an XY coordinate by a specified distance and return selected features.
             <td>geometryfield</td>
             <td>The name of the geometry column. The default is <strong>the_geom</strong>.</td>
         </tr>
+         <tr class="success">
+            <td>nsrid</td>
+            <td>The SRID of the geometry column. The default is <strong>2264</strong>.</td>
+        </tr>
         <tr class="success">
             <td>fields</td>
             <td>Comma delimited list of fields to return. The default is <strong>all fields</strong>.</td>

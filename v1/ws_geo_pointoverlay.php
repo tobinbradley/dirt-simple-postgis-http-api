@@ -25,17 +25,20 @@ $geometryfield = isset($_REQUEST['geometryfield']) ? $_REQUEST['geometryfield'] 
 $geometrysrid = isset($_REQUEST['geometrysrid']) ? $_REQUEST['geometrysrid'] : 2264;
 $fields = isset($_REQUEST['fields']) ? $_REQUEST['fields'] : "*";
 $parameters = isset($_REQUEST['parameters']) ? " and " . $_REQUEST['parameters'] : "";
+$order = isset($_REQUEST['order']) ? " order by " . $_REQUEST['order'] : "";
 $limit = isset($_REQUEST['limit']) ? " limit " . $_REQUEST['limit'] : '';
 
 # Perform the query
 $sql = "SELECT " . $fields ." FROM " . $table ." a WHERE
-	st_within(ST_transform(ST_GeometryFromText('POINT(" . $x . " " . $y .  ")', " . $srid . ")," . $geometrysrid . "),a." . $geometryfield . ") " . $parameters . $limit;
+	st_within(ST_transform(ST_GeometryFromText('POINT(" . $x . " " . $y .  ")', " . $srid . ")," . $geometrysrid . "),a." . $geometryfield . ") " . $parameters . $order . $limit;
+echo $sql;
 $db = pgConnection();
 $statement=$db->prepare( $sql );
 $statement->execute();
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 # send return
+if (isset($_REQUEST['debug'])) $result = array_merge($result, array("sql" => $sql));
 $json= json_encode( $result );
 echo isset($_GET['callback']) ? "{$_GET['callback']}($json)" : $json;
 

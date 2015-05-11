@@ -1,6 +1,6 @@
 # Road Intersection
 [Service URL](v1/ws_geo_roadintersection.php) |
-[Demo URL](v1/ws_geo_roadintersection.php?street1=ruth&street2=dolphin)
+[Demo URL](v1/ws_geo_roadintersection.php?street1=ruth&street2=dolphin&geometryfield=the_geom)
 
 ### Description
 Find the point location of road intersections from a road line table.
@@ -32,7 +32,7 @@ Find the point location of road intersections from a road line table.
         </tr>
         <tr class="success">
             <td>geometryfield</td>
-            <td>The name of the to_table geometry column. The default is <strong>the_geom</strong>.</td>
+            <td>The name of the to_table geometry column. The default is <strong>geom</strong>.</td>
         </tr>
     </tbody>
 </table>

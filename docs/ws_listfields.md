@@ -1,5 +1,5 @@
 # List Fields
-[Service URL](v1/ws_listfields.php) | 
+[Service URL](v1/ws_listfields.php) |
 [Demo URL](v1/ws_listfields.php?table=tax_parcels)
 
 ### Description
@@ -17,7 +17,7 @@ List the fields in a table or view.
         <tr>
             <td>table</td>
             <td>The name of the table or view to retrieve fields from.</td>
-        </tr>        
+        </tr>
     </tbody>
 </table>
 

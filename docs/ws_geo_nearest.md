@@ -1,6 +1,6 @@
 # Nearest
 [Service URL](v1/ws_geo_nearest.php) |
-[Demo URL](v1/ws_geo_nearest.php?x=-80.757&y=35.249&srid=4326&table=parks&fields=prkname&limit=10)
+[Demo URL](v1/ws_geo_nearest.php?x=-80.757&y=35.249&srid=4326&table=parks&fields=prkname&limit=10&geometryfield=the_geom)
 
 ### Description
 Get the nearest features to a point ordered by distance.
@@ -32,7 +32,7 @@ Get the nearest features to a point ordered by distance.
         </tr>
         <tr class="success">
             <td>geometryfield</td>
-            <td>The name of the geometry column. The default is <strong>the_geom</strong>.</td>
+            <td>The name of the geometry column. The default is <strong>geom</strong>.</td>
         </tr>
         <tr class="success">
             <td>fields</td>

@@ -1,6 +1,6 @@
 # Point Overlay
 [Service URL](v1/ws_geo_pointoverlay.php) |
-[Demo URL](v1/ws_geo_pointoverlay.php?x=1440901&y=479406&srid=2264&table=voting_precincts&fields=precno,cc,school)
+[Demo URL](v1/ws_geo_pointoverlay.php?x=1440901&y=479406&srid=2264&table=voting_precincts&fields=precno,cc,school&geometryfield=the_geom)
 
 ### Description
 Do an intersection on a table using a point coordinate.
@@ -36,11 +36,7 @@ Do an intersection on a table using a point coordinate.
         </tr>
         <tr class="success">
             <td>geometryfield</td>
-            <td>The name of the geometry column. The default is <strong>the_geom</strong>.</td>
-        </tr>
-        <tr class="success">
-            <td>geometrysrid</td>
-            <td>The SRID of the table geometry column. The default is <strong>2264</strong>.</td>
+            <td>The name of the geometry column. The default is <strong>geom</strong>.</td>
         </tr>
         <tr class="success">
             <td>fields</td>

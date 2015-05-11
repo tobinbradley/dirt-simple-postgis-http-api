@@ -1,6 +1,6 @@
 # Get Centroid
 [Service URL](v1/ws_geo_getcentroid.php) |
-[Demo URL](v1/ws_geo_getcentroid.php?table=voting_precincts&parameters=precno%3D%27100%27)
+[Demo URL](v1/ws_geo_getcentroid.php?table=voting_precincts&parameters=precno%3D%27100%27&geometryfield=the_geom)
 
 ### Description
 Get the centroid of a feature(s).
@@ -28,7 +28,7 @@ Get the centroid of a feature(s).
         </tr>
         <tr class="success">
            <td>geometryfield</td>
-            <td>The name of the geometry column. The default is <strong>the_geom</strong>.</td>
+            <td>The name of the geometry column. The default is <strong>geom</strong>.</td>
         </tr>
         <tr class="success">
            <td>forceonsurface</td>

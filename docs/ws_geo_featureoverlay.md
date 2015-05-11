@@ -1,6 +1,6 @@
 # Feature Overlay
 [Service URL](v1/ws_geo_featureoverlay.php) |
-[Demo URL](v1/ws_geo_featureoverlay.php?from_table=tax_parcels&to_table=voting_precincts&fields=f.pid,t.precno&parameters=f.pid%3D%2711111111%27)
+[Demo URL](v1/ws_geo_featureoverlay.php?from_table=tax_parcels&to_table=voting_precincts&fields=f.pid,t.precno&parameters=f.pid%3D%2711111111%27&from_geometryfield=the_geom&to_geometryfield=the_geom)
 
 ### Description
 Intersect feature(s) from one table with another table.
@@ -24,11 +24,11 @@ Intersect feature(s) from one table with another table.
         </tr>
         <tr class="success">
             <td>from_geometryfield</td>
-            <td>The name of the from_table geometry column. The default is <strong>the_geom</strong>.</td>
+            <td>The name of the from_table geometry column. The default is <strong>geom</strong>.</td>
         </tr>
         <tr class="success">
             <td>to_geometryfield</td>
-            <td>The name of the to_table geometry column. The default is <strong>the_geom</strong>.</td>
+            <td>The name of the to_table geometry column. The default is <strong>geom</strong>.</td>
         </tr>
         <tr class="success">
             <td>fields</td>

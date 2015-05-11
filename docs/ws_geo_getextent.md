@@ -1,6 +1,6 @@
 # Get Extent
 [Service URL](v1/ws_geo_getextent.php) |
-[Demo URL](v1/ws_geo_getextent.php?table=tax_parcels&parameters=pid%3d%2711111111%27)
+[Demo URL](v1/ws_geo_getextent.php?table=tax_parcels&parameters=pid%3d%2711111111%27&geometryfield=the_geom)
 
 ### Description
 Get the extent of features from a geotable.
@@ -28,7 +28,7 @@ Get the extent of features from a geotable.
         </tr>
         <tr class="success">
            <td>geometryfield</td>
-            <td>The name of the geometry column. The default is <strong>the_geom</strong>.</td>
+            <td>The name of the geometry column. The default is <strong>geom</strong>.</td>
         </tr>
     </tbody>
 </table>

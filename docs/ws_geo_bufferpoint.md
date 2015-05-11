@@ -1,6 +1,6 @@
 # Buffer Point
 [Service URL](v1/ws_geo_bufferpoint.php) |
-[Demo URL](v1/ws_geo_bufferpoint.php?x=1440901&y=479406&srid=2264&distance=20000&table=schools&fields=type,schlname,address&limit=3)
+[Demo URL](v1/ws_geo_bufferpoint.php?x=1440901&y=479406&srid=2264&distance=20000&table=schools&fields=type,schlname,address&limit=3&geometryfield=the_geom)
 
 ### Description
 Buffer an XY coordinate by a specified distance and return selected features.
@@ -36,11 +36,7 @@ Buffer an XY coordinate by a specified distance and return selected features.
         </tr>
         <tr class="success">
             <td>geometryfield</td>
-            <td>The name of the geometry column. The default is <strong>the_geom</strong>.</td>
-        </tr>
-         <tr class="success">
-            <td>nsrid</td>
-            <td>The SRID of the geometry column. The default is <strong>2264</strong>.</td>
+            <td>The name of the geometry column. The default is <strong>geom</strong>.</td>
         </tr>
         <tr class="success">
             <td>fields</td>

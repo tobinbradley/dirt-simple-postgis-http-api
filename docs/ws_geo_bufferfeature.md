@@ -1,6 +1,6 @@
 # Buffer Feature
 [Service URL](v1/ws_geo_bufferfeature.php) |
-[Demo URL](v1/ws_geo_bufferfeature.php?from_table=tax_parcels&to_table=parks&distance=10000&fields=f.pid,t.prkname,t.prkaddr&parameters=f.pid%3D%2711111111%27&order=t.prkname)
+[Demo URL](v1/ws_geo_bufferfeature.php?from_table=tax_parcels&to_table=parks&distance=10000&fields=f.pid,t.prkname,t.prkaddr&parameters=f.pid%3D%2711111111%27&order=t.prkname&from_geometryfield=the_geom&to_geometryfield=the_geom)
 
 
 ### Description
@@ -29,11 +29,11 @@ Buffer the feature(s) of one table and return the results of another table.
         </tr>
         <tr class="success">
             <td>from_geometryfield</td>
-            <td>The name of the from_table geometry column. The default is <strong>the_geom</strong>.</td>
+            <td>The name of the from_table geometry column. The default is <strong>geom</strong>.</td>
         </tr>
         <tr class="success">
             <td>to_geometryfield</td>
-            <td>The name of the to_table geometry column. The default is <strong>the_geom</strong>.</td>
+            <td>The name of the to_table geometry column. The default is <strong>geom</strong>.</td>
         </tr>
         <tr class="success">
             <td>fields</td>

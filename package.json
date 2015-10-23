@@ -1,0 +1,22 @@
+{
+  "name": "noderest",
+  "version": "1.0.0",
+  "description": "Node version of my PHP services.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tobin Bradley",
+  "license": "MIT",
+  "dependencies": {
+    "babel": "^5.8.23",
+    "hapi": "^10.4.0",
+    "hapi-router": "^3.4.0",
+    "hapi-swagger": "^2.1.0",
+    "inert": "^3.1.0",
+    "joi": "^6.9.0",
+    "pg": "^4.4.2",
+    "squel": "^4.2.0",
+    "vision": "^3.0.0"
+  }
+}

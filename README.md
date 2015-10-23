@@ -1,5 +1,5 @@
 # Getting Started
-The Dirt-Simple PostGIS HTTP API is an easy way to expose geospatial functionality to your applications. It takes simple requests over HTTP (GET or POST) and returns JSON or JSONP to the requester. Although the focus of the project has generally been on exposing PostGIS functionality to web apps, you can use the framework to connect to any PHP PDO supported database (read: just about anything).
+The Dirt-Simple PostGIS HTTP API is an easy way to expose geospatial functionality to your applications. It takes simple requests over HTTP (GET or POST) and returns JSON or JSONP to the requester. Although the focus of the project has generally been on exposing PostGIS functionality to web apps, you can use the framework to connect to any PHP PDO supported database (read: just about anything). 
 
 ## Setup
 #### Step 1 - PostgreSQL and PostGIS
@@ -103,7 +103,3 @@ You can consume the services via any server-side language you like. Here we'll u
         str = unescape(str);
         return str;
     }
-
-
-
-

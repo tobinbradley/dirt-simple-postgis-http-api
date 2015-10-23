@@ -11,6 +11,7 @@ require("../inc/json.inc.php");
 # Retrive URL arguments
 $requestTypes = isset($_REQUEST["searchtypes"]) ? explode(",", $_REQUEST["searchtypes"]) : ["address"];
 $query = strtoupper(trim($_REQUEST['query']));
+$tsquery = str_replace(' ', ' & ', $query) . ':*';
 
 # Vars for the SQL calls
 $query_array = explode(' ', $query);  // To get the number for an address
@@ -30,7 +31,7 @@ else {
     # Address
     if (is_numeric($query_array[0]) and !is_numeric($query) and in_array("address", $requestTypes)) {
         if (strlen($sql) > 0) $sql .= " union ";
-        $sql .= "(select objectid as gid, full_address as name, 'ADDRESS' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat, num_parent_parcel as moreinfo, similarity(substring(full_address from 1 for "  . strlen($query)  . "), :query2) as score from master_address_table where txt_street_number = :housenum and soundex(substring(full_address from 1 for "  . strlen($query)  . " )) = soundex(:query) and cde_status='A' and num_x_coord > 0 ORDER BY score DESC limit 50)";
+        $sql .= "(select objectid as gid, full_address as name, 'ADDRESS' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat, num_parent_parcel as moreinfo, '1' as score from master_address_table where ts @@ to_tsquery('addressing_en', :tsquery) and cde_status='A' and num_x_coord > 0 ORDER BY score DESC limit 50)";
     }
 
 
@@ -116,6 +117,7 @@ $statement=$db->prepare( $sql );
 if (strpos($sql, ":housenum")) $statement->bindParam(':housenum', $query_array[0], PDO::PARAM_STR);
 if (strpos($sql, ":like")) $statement->bindParam(':like', $like, PDO::PARAM_STR);
 if (strpos($sql, ":query")) $statement->bindParam(':query', $query, PDO::PARAM_STR);
+if (strpos($sql, ":tsquery")) $statement->bindParam(':tsquery', $tsquery, PDO::PARAM_STR);
 if (strpos($sql, ":query2")) $statement->bindParam(':query2', $query, PDO::PARAM_STR);
 if (strpos($sql, ":firststreet")) $statement->bindParam(':firststreet', $firstStreet, PDO::PARAM_STR);
 if (strpos($sql, ":secondstreet")) $statement->bindParam(':secondstreet', $secondStreet, PDO::PARAM_STR);

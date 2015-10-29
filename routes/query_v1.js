@@ -12,6 +12,9 @@ function formatSQL(request) {
 	if (request.query.sort) {
 		sql.order(request.query.sort);
 	}
+	if (request.query.group) {
+		sql.group(request.query.group);
+	}
 	return sql.toString();
 }
 
@@ -37,7 +40,9 @@ module.exports = [{
 				sort: Joi.string()
 					.description('A field or fields to sort the return by.'),
 				limit: Joi.number().integer().max(1000).min(1).default(100)
-					.description('Limit the number of features returned. The default is <em>100</em>.')
+					.description('Limit the number of features returned. The default is <em>100</em>.'),
+                                group: Joi.string()
+                                        .description('Column(s) to group by.')
 			}
 		},
 		jsonp: 'callback',

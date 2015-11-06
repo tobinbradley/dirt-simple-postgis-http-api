@@ -9,7 +9,7 @@ function formatSQL(request) {
 		find_srid('', '${request.params.table}', '${request.query.geom_column}'))
 	`;
 	var dwithin = `
-		ST_DWithin(${request.query.geom_column},
+		ST_DWithin(${request.params.table}.${request.query.geom_column},
 			${point},
 			${request.query.distance})
 	`;
@@ -22,6 +22,10 @@ function formatSQL(request) {
 		.limit(request.query.limit);
 	if (request.query.sort) {
 		sql.order(request.query.sort);
+	}
+	if (request.query.join) {
+		var join = request.query.join.split(';');
+		sql.join(join[0], null, join[1]);
 	}
 
 	return sql.toString();
@@ -60,6 +64,8 @@ module.exports = [{
 					.description('Buffer the overlay feature(s) by units of the geometry column. Default is <em>0</em>.'),
 				sort: Joi.string()
 					.description('A field or fields to sort the return by.'),
+				join: Joi.string()
+					.description('A table to join and a join expression separated by a semicolon. Ex: <em>table2;table1.id = table2.id</em>'),
 				limit: Joi.number().integer().max(1000).min(1).default(10)
 					.description('Limit the number of features returned. The default is <em>10</em>.')
 			}

@@ -9,7 +9,7 @@ function formatSQL(request) {
 		find_srid('', '${request.params.table}', '${request.query.geom_column}'))
 	`;
 	var distance = `
-		ST_Distance(${point}, ${request.query.geom_column})
+		ST_Distance(${point}, ${request.params.table}.${request.query.geom_column})
 	`;
 	var order = `
 		${request.query.geom_column} <-> ${point}
@@ -22,6 +22,11 @@ function formatSQL(request) {
 		.where(request.query.filter)
 		.order(order)
 		.limit(request.query.limit);
+
+	if (request.query.join) {
+		var join = request.query.join.split(';');
+		sql.join(join[0], null, join[1]);
+	}
 
 	return sql.toString();
 }
@@ -55,6 +60,8 @@ module.exports = [{
 					.description('Columns to return. The default is <em>all columns</em>.'),
 				filter: Joi.string().default('')
 					.description('Filtering parameters for a SQL WHERE statement.'),
+				join: Joi.string()
+					.description('A table to join and a join expression separated by a semicolon. Ex: <em>table2;table1.id = table2.id</em>'),
 				limit: Joi.number().integer().max(1000).min(1).default(10)
 					.description('Limit the number of features returned. The default is <em>10</em>.')
 			}

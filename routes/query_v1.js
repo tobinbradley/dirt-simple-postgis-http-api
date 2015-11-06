@@ -15,6 +15,11 @@ function formatSQL(request) {
 	if (request.query.group) {
 		sql.group(request.query.group);
 	}
+	if (request.query.join) {
+		var join = request.query.join.split(';');
+		sql.join(join[0], null, join[1]);
+	}
+	
 	return sql.toString();
 }
 
@@ -41,8 +46,10 @@ module.exports = [{
 					.description('A field or fields to sort the return by.'),
 				limit: Joi.number().integer().max(1000).min(1).default(100)
 					.description('Limit the number of features returned. The default is <em>100</em>.'),
-                                group: Joi.string()
-                                        .description('Column(s) to group by.')
+				join: Joi.string()
+					.description('A table to join and a join expression separated by a semicolon. Ex: <em>table2;table1.id = table2.id</em>'),
+                group: Joi.string()
+                    .description('Column(s) to group by.')
 			}
 		},
 		jsonp: 'callback',

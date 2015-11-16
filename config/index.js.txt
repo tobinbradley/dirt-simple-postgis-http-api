@@ -24,7 +24,7 @@ module.exports = {
 			table: 'master_address_table',
 			columns: `objectid as id, full_address as label, 'ADDRESS' as type, round(ST_X(ST_Transform(the_geom, 4326))::NUMERIC,4) as lng, round(ST_Y(ST_Transform(the_geom, 4326))::NUMERIC,4) as lat, num_parent_parcel as pid, full_address as address`,
 			where: `ts @@ to_tsquery('addressing_en', ?) and cde_status='A' and num_x_coord > 0`,
-			format: function(query) { return query.toUpperCase().replace(/ /g, '&'); }
+			format: function(query) { return query.trim().toUpperCase().replace(/ /g, '&') + ':*'; }
 		},
 		park: {
 			table: 'parks p, tax_parcels t',

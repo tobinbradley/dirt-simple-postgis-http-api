@@ -45,8 +45,8 @@ module.exports = [{
 					.description('The SRID for the returned centroid. The default is <em>4326</em> Lat/Lng.'),
 				filter: Joi.string()
 					.description('Filtering parameters for a SQL WHERE statement.'),
-				force_on_surface: Joi.string()
-					.description('Passing anything to this argument will force the centroid returned to be on the surface of a feature. The default is the <em>absolute centroid</em>.')
+				force_on_surface: Joi.boolean().default(false)
+					.description('Set true to force point on surface. The default is the <em>false</em>.')
 			}
 		},
 		jsonp: 'callback',

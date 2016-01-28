@@ -5,8 +5,9 @@ var Joi = require('joi'),
 
 function formatSQL(request) {
 	var sqlParts = [];
+	var search = decodeURIComponent(request.query.tables);
 
-	request.query.tables.split(',').forEach(function(item) {
+	search.split(',').forEach(function(item) {
 		var partial = squel.select()
 					.from(config.search[item].table)
 					.field(config.search[item].columns)
@@ -16,7 +17,8 @@ function formatSQL(request) {
 		sqlParts.push('(' + partial.toString() + ')');
 	});
 
-	return sqlParts.join(' union ') + ' order by type, label';
+	var returnSQL = sqlParts.join(' union ') + ' order by type, label';
+	return returnSQL;
 }
 
 

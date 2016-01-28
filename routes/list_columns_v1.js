@@ -1,40 +1,40 @@
 var Joi = require('joi'),
-	squel = require('squel').useFlavour('postgres'),
-	config = require('../config');
+    squel = require('squel').useFlavour('postgres'),
+    config = require('../config');
 
 
 function formatSQL(request) {
-	return squel.select()
-		.from('pg_namespace, pg_attribute, pg_type, pg_class')
-		.field('attname', 'field_name')
-		.field('typname', 'field_type')
-		.where('pg_type.oid = atttypid')
-		.where('pg_class.oid = attrelid')
-		.where('relnamespace = pg_namespace.oid')
-		.where('attnum >= 1')
-		.where('relname = ?', request.params.table)
-		.toString();
+    return squel.select()
+        .from('pg_namespace, pg_attribute, pg_type, pg_class')
+        .field('attname', 'field_name')
+        .field('typname', 'field_type')
+        .where('pg_type.oid = atttypid')
+        .where('pg_class.oid = attrelid')
+        .where('relnamespace = pg_namespace.oid')
+        .where('attnum >= 1')
+        .where('relname = ?', request.params.table)
+        .toString();
 }
 
 
 module.exports = [{
-	method: 'GET',
-	path: '/list_columns/v1/{table}',
-	config: {
-		description: 'list columns',
-		notes: 'Returns a list of fields in the specified table.',
-		tags: ['api'],
-		validate: {
-			params: {
-				table: Joi.string()
-					.required()
-					.description('name of the table')
-			}
-		},
-		jsonp: 'callback',
-		cache: config.cache,
-		handler: function(request, reply) {
-			config.fetch.postgis(config.db.postgis, formatSQL(request), reply);
-		}
-	}
+    method: 'GET',
+    path: '/list_columns/v1/{table}',
+    config: {
+        description: 'list columns',
+        notes: 'Returns a list of fields in the specified table.',
+        tags: ['api'],
+        validate: {
+            params: {
+                table: Joi.string()
+                    .required()
+                    .description('name of the table')
+            }
+        },
+        jsonp: 'callback',
+        cache: config.cache,
+        handler: function(request, reply) {
+            config.fetch.postgis(config.db.postgis, formatSQL(request), reply);
+        }
+    }
 }];

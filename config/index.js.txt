@@ -6,7 +6,15 @@
 // 	search: a configuration for the search services
 // 	fetch: functions for fetching data
 //
-// Each search must return the fields id, label, type, lng, lat, pid, and address.
+// Search return columns must include the following:
+// type     the category of search (i.e. "address")
+// label    the return value you want to sort by
+//
+// The search performs a union of all tables specified in the query,
+// so to search for more than one table in a single query, the return
+// columns for each table in that query *must* be the same.
+// 
+
 var pg = require('pg');
 
 module.exports = {

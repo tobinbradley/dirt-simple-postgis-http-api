@@ -15,8 +15,6 @@
 // columns for each table in that query *must* be the same.
 //
 
-var pg = require('pg');
-
 module.exports = {
     basePath: '/',
     port: 8123,

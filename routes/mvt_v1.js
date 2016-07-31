@@ -16,7 +16,7 @@ function formatSQL(request) {
     var sql = squel.select()
         .from(request.params.table)
         .field(request.query.columns)
-        .field(`ST_Transform(${request.query.geom_column}, 4326) as geom`)
+        .field(`ST_Simplify(ST_Transform(${request.query.geom_column}, 4326), 6) as geom`)
         .where(request.query.filter)
         .limit(request.query.limit);
 

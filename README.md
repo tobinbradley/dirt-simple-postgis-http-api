@@ -8,7 +8,7 @@ This release uses Node. The previous release, based on PHP, is available in the 
 
 #### PostgreSQL and PostGIS
 
-You'll need PostgreSQL and PostGIS [set up](http://postgis.net/docs/manual-2.0/postgis_installation.html) with some data in it. Note the login you use for the API needs read rights to the geometry columns view and any tables or views you wish to make available. As this API is designed to be exposed to the web, I wouldn't recommend using a login with any kind of write to administrative access to Postgres.
+You'll need PostgreSQL and PostGIS [set up](http://postgis.net/docs/manual-2.0/postgis_installation.html) with some data in it. Note the login you use for the API needs read rights to the geometry columns view and any tables or views you wish to make available. As this API is designed to be exposed to the web, I wouldn't recommend using a login with write or administrative access to Postgres.
 
 #### Node
 

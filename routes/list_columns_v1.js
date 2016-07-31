@@ -1,6 +1,7 @@
 var Joi = require('joi'),
     squel = require('squel').useFlavour('postgres'),
-    config = require('../config');
+    config = require('../config'),
+    pgp = require('pg-promise')();
 
 
 function formatSQL(request) {
@@ -34,7 +35,18 @@ module.exports = [{
         jsonp: 'callback',
         cache: config.cache,
         handler: function(request, reply) {
-            config.fetch.postgis(config.db.postgis, formatSQL(request), reply);
+            let db = pgp(config.db.postgis);
+            db
+                .query(formatSQL(request))
+                .then(function(data) {
+                    reply(data);
+                })
+                .catch(function(err) {
+                    reply({
+                        'error': 'error running query',
+                        'error_details': err
+                    });
+                });
         }
     }
 }];

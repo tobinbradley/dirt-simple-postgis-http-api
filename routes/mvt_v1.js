@@ -85,8 +85,7 @@ module.exports = [{
                     zlib.gzip(buff, function(err, pbf) {
                         reply(pbf)
                             .header('Content-Type', 'application/x-protobuf')
-                            .header('Content-Encoding', 'gzip')
-                            .header('Cache-Control', config.cache);
+                            .header('Content-Encoding', 'gzip');
                     });
                 });
             })

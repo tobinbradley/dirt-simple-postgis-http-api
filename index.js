@@ -29,6 +29,7 @@ server.register([
             register: HapiSwagger,
             options: {
                 basePath: config.basePath,
+                jsonPath: config.jsonPath,
                 info: {
                     title: 'Dirt-Simple PostGIS REST API',
                     description: 'Created by Mecklenburg County GIS',

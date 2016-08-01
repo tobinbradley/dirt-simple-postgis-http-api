@@ -18,7 +18,6 @@ Install [Node](https://nodejs.org/en/). Then install the project dependencies:
 npm install
 ```
 
-
 #### Configuration and Start
 
 Rename `config/index.js.txt` to `config/index.js` and change the connection and other information to reflect your environment. Then start the server.
@@ -52,8 +51,8 @@ Babel is included in the project, so you can use ES6 features, although the only
 If you are proxying behind Apache, you'll need two proxies to deal with swagger. If you wanted to share your project at `/api`, you would need:
 
 ``` bash
-ProxyPass /api http://localhost:8123
-ProxyPass /docs http://localhost:8123/docs
+ProxyPass /api http://127.0.0.1:8123
+ProxyPass /swaggerui http://127,0.0.1:8123/swaggerui
 ```
 
-You will also need to change `basePath` in `config/index.js` to `http://localhost/api`.
+You will also need to change `basePath` to `/api` and `jsonPath` to  `/swaggerui/swagger.json` in `config/index.js`.

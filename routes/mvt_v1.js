@@ -79,7 +79,7 @@ module.exports = [{
                     precision: 6
                 }, function(error, result) {
                     var tileindex = geojsonVt(result);
-                    var tile = tileindex.getTile(parseInt(request.params.z, 10), parseInt(request.params.x, 10), parseInt(request.params.y));
+                    var tile = tileindex.getTile(request.params.z, request.params.x, request.params.y);
                     // pass in an object mapping layername -> tile object
                     var buff = vtpbf.fromGeojsonVt({[request.params.table]: tile});
                     zlib.gzip(buff, function(err, pbf) {

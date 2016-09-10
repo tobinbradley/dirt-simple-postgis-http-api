@@ -56,3 +56,9 @@ ProxyPass /swaggerui http://127,0.0.1:8123/swaggerui
 ```
 
 You will also need to change `basePath` to `/api` and `jsonPath` to  `/swaggerui/swagger.json` in `config/index.js`.
+
+If you pass path parameters that have encoded slashes through Apache (i.e. `%2F`), Apache will be default reject those requests with a 404 (Docs: [AllowEncodedSlashes](https://httpd.apache.org/docs/2.4/mod/core.html#allowencodedslashes)). To fix that, drop this on the bottom of your httpd.conf:
+
+```
+AllowEncodedSlashes NoDecode
+```

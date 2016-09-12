@@ -56,7 +56,7 @@ module.exports = [{
             query: {
                 geom_column: Joi.string().default('geom')
                     .description('The geometry column of the table. The default is <em>geom</em>.'),
-                columns: Joi.string().default('*')
+                columns: Joi.string().default('')
                     .description('Columns to return. The default is <em>all columns</em>.'),
                 filter: Joi.string().default('')
                     .description('Filtering parameters for a SQL WHERE statement.'),
@@ -74,20 +74,27 @@ module.exports = [{
         db
             .query(formatSQL(request))
             .then(function(data) {
-                dbgeo.parse(data, {
-                    outputFormat: 'geojson',
-                    precision: 6
-                }, function(error, result) {
-                    var tileindex = geojsonVt(result);
-                    var tile = tileindex.getTile(request.params.z, request.params.x, request.params.y);
-                    // pass in an object mapping layername -> tile object
-                    var buff = vtpbf.fromGeojsonVt({[request.params.table]: tile});
-                    zlib.gzip(buff, function(err, pbf) {
-                        reply(pbf)
-                            .header('Content-Type', 'application/x-protobuf')
-                            .header('Content-Encoding', 'gzip');
+                if (data.length > 0) {
+                    dbgeo.parse(data, {
+                        outputFormat: 'geojson',
+                        precision: 6
+                    }, function(error, result) {
+                        var tileindex = geojsonVt(result);
+                        var tile = tileindex.getTile(request.params.z, request.params.x, request.params.y);
+                        // pass in an object mapping layername -> tile object
+                        var buff = vtpbf.fromGeojsonVt({[request.params.table]: tile});
+                        zlib.gzip(buff, function(err, pbf) {
+                            reply(pbf)
+                                .header('Content-Type', 'application/x-protobuf')
+                                .header('Content-Encoding', 'gzip');
+                        });
                     });
-                });
+                } else {
+                    reply({
+                        'error': 'error',
+                        'error_details': 'no data found for this tile'
+                    }).code(404);
+                }
             })
             .catch(function(err) {
                 reply({

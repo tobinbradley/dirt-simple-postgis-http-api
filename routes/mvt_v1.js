@@ -57,7 +57,7 @@ module.exports = [{
                 geom_column: Joi.string().default('geom')
                     .description('The geometry column of the table. The default is <em>geom</em>.'),
                 columns: Joi.string().default('')
-                    .description('Columns to return. The default is <em>all columns</em>.'),
+                    .description('Columns to return other than geom. The default is <em>no columns</em>.'),
                 filter: Joi.string().default('')
                     .description('Filtering parameters for a SQL WHERE statement.'),
                 join: Joi.string()

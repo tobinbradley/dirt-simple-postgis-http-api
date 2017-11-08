@@ -1,7 +1,7 @@
 const dbgeo = require('dbgeo');
 const SphericalMercator = require('@mapbox/sphericalmercator');
 const sm = new SphericalMercator({
-  size: 256,
+  size: 256
 });
 const zlib = require('zlib');
 const vtpbf = require('vt-pbf');
@@ -18,7 +18,7 @@ function formatSQL(request) {
     .field(request.query.columns)
     .field(
       `ST_Simplify(ST_Transform(${request.query
-        .geom_column}, 4326), 0.000001) as geom`,
+        .geom_column}, 4326), 0.000001) as geom`
     )
     .where(request.query.filter)
     .limit(request.query.limit);
@@ -32,9 +32,9 @@ function formatSQL(request) {
   sql.where(
     `${request.query
       .geom_column} && ST_Transform(ST_MakeEnvelope(${smBounds.join(
-      ',',
+      ','
     )} , 4326), find_srid('', '${request.params.table}', '${request.query
-      .geom_column}'))`,
+      .geom_column}'))`
   );
 
   return sql.toString();
@@ -64,24 +64,24 @@ module.exports = [
           y: Joi.number()
             .integer()
             .required()
-            .description('Y of the Z/X/Y tile spec.'),
+            .description('Y of the Z/X/Y tile spec.')
         },
         query: {
           geom_column: Joi.string()
             .default('geom')
             .description(
-              'The geometry column of the table. The default is <em>geom</em>.',
+              'The geometry column of the table. The default is <em>geom</em>.'
             ),
           columns: Joi.string()
             .default('')
             .description(
-              'Columns to return other than geom. The default is <em>no columns</em>.',
+              'Columns to return other than geom. The default is <em>no columns</em>.'
             ),
           filter: Joi.string()
             .default('')
             .description('Filtering parameters for a SQL WHERE statement.'),
           join: Joi.string().description(
-            'A table to join and a join expression separated by a semicolon. Ex: <em>table2;table1.id = table2.id</em>',
+            'A table to join and a join expression separated by a semicolon. Ex: <em>table2;table1.id = table2.id</em>'
           ),
           limit: Joi.number()
             .integer()
@@ -89,12 +89,12 @@ module.exports = [
             .min(1)
             .default(5000)
             .description(
-              'Limit the number of features returned. The default is <em>5000</em>. The max is 10000.',
-            ),
-        },
+              'Limit the number of features returned. The default is <em>5000</em>. The max is 10000.'
+            )
+        }
       },
       jsonp: 'callback',
-      cache: config.cache,
+      cache: config.cache
     },
     handler: function(request, reply) {
       db
@@ -105,37 +105,40 @@ module.exports = [
               data,
               {
                 outputFormat: 'geojson',
-                precision: 6,
+                precision: 6
               },
               function(error, result) {
                 var tileindex = geojsonVt(result);
                 var tile = tileindex.getTile(
                   request.params.z,
                   request.params.x,
-                  request.params.y,
+                  request.params.y
                 );
                 // pass in an object mapping layername -> tile object
-                var buff = vtpbf.fromGeojsonVt({[request.params.table]: tile});
+                var buff = vtpbf.fromGeojsonVt(
+                  {[request.params.table]: tile},
+                  {version: 2}
+                );
                 zlib.gzip(buff, function(err, pbf) {
                   reply(pbf)
                     .header('Content-Type', 'application/x-protobuf')
                     .header('Content-Encoding', 'gzip');
                 });
-              },
+              }
             );
           } else {
             reply({
               error: 'error',
-              error_details: 'no data found for this tile',
+              error_details: 'no data found for this tile'
             }).code(404);
           }
         })
         .catch(function(err) {
           reply({
             error: 'error running query',
-            error_details: err,
+            error_details: err
           });
         });
-    },
-  },
+    }
+  }
 ];

@@ -1,43 +1,60 @@
-const dbgeo = require('dbgeo');
 const SphericalMercator = require('@mapbox/sphericalmercator');
 const sm = new SphericalMercator({
   size: 256
 });
-const zlib = require('zlib');
-const vtpbf = require('vt-pbf');
-const geojsonVt = require('geojson-vt');
 const Joi = require('joi');
 const config = require('../config');
 const db = require('../config/db.js');
 const squel = require('squel').useFlavour('postgres');
+const vtpbf = require('vt-pbf');
+const zlib = require('zlib');
 
 function formatSQL(request) {
-  var sql = squel
+  let smBounds = sm.bbox(
+    request.params.x,
+    request.params.y,
+    request.params.z,
+    false,
+    '900913'
+  );
+
+  let sql = squel
     .select()
-    .from(request.params.table)
     .field(request.query.columns)
     .field(
-      `ST_Simplify(ST_Transform(${request.query
-        .geom_column}, 4326), 0.000001) as geom`
+      `
+			ST_AsMVTGeom(
+				ST_Transform(${request.query.geom_column}, 3857),
+				ST_MakeEnvelope(${smBounds.join(',')}, 3857),
+				4096,
+				0,
+				false
+			) geom
+		`
     )
+    .from(request.params.table)
     .where(request.query.filter)
-    .limit(request.query.limit);
+    .where(
+      `${
+        request.query.geom_column
+      } && ST_Transform(ST_MakeEnvelope(${smBounds.join(
+        ','
+      )}, 3857), find_srid('', '${request.params.table}', '${
+        request.query.geom_column
+      }'))`
+    );
 
   if (request.query.join) {
     var join = request.query.join.split(';');
     sql.join(join[0], null, join[1]);
   }
 
-  var smBounds = sm.bbox(request.params.x, request.params.y, request.params.z);
-  sql.where(
-    `${request.query
-      .geom_column} && ST_Transform(ST_MakeEnvelope(${smBounds.join(
-      ','
-    )} , 4326), find_srid('', '${request.params.table}', '${request.query
-      .geom_column}'))`
-  );
+  let sql2 = squel
+    .select()
+    .field(`ST_AsMVT(q, '${request.params.table}', 4096, 'geom')`)
+    .from(sql, 'q');
 
-  return sql.toString();
+  return sql2.toString();
 }
 
 module.exports = [
@@ -101,31 +118,11 @@ module.exports = [
         .query(formatSQL(request))
         .then(function(data) {
           if (data.length > 0) {
-            dbgeo.parse(
-              data,
-              {
-                outputFormat: 'geojson',
-                precision: 6
-              },
-              function(error, result) {
-                var tileindex = geojsonVt(result);
-                var tile = tileindex.getTile(
-                  request.params.z,
-                  request.params.x,
-                  request.params.y
-                );
-                // pass in an object mapping layername -> tile object
-                var buff = vtpbf.fromGeojsonVt(
-                  {[request.params.table]: tile},
-                  {version: 2}
-                );
-                zlib.gzip(buff, function(err, pbf) {
-                  reply(pbf)
-                    .header('Content-Type', 'application/x-protobuf')
-                    .header('Content-Encoding', 'gzip');
-                });
-              }
-            );
+            zlib.gzip(data[0].st_asmvt, function(err, result) {
+              reply(result)
+                .header('Content-Type', 'application/x-protobuf')
+                .header('Content-Encoding', 'gzip');
+            });
           } else {
             reply({
               error: 'error',

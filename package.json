@@ -11,16 +11,14 @@
   "dependencies": {
     "@mapbox/sphericalmercator": "^1.0.5",
     "dbgeo": "^1.1.0",
-    "geojson-vt": "^2.4.0",
     "hapi": "^16.6.2",
     "hapi-router": "^3.5.0",
     "hapi-swagger": "^8.0.0",
     "inert": "^4.2.1",
     "joi": "^13.0.1",
-    "pg-promise": "^7.3.1",
+    "pg-promise": "^7.3.2",
     "squel": "^5.12.0",
-    "vision": "^4.1.1",
-    "vt-pbf": "^3.1.0"
+    "vision": "^4.1.1"
   },
   "eslintConfig": {
     "env": {

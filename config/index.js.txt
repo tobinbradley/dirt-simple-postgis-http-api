@@ -16,8 +16,8 @@
 //
 
 module.exports = {
-    basePath: '/',
-    jsonPath: '/swagger.json',
+    schemes: ['http'],
+    host: 'localhost',
     port: 8123,
     db: {
         postgis: 'postgres://user:password@server/database'

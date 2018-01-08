@@ -48,14 +48,7 @@ Input validation and default values are handled via [joi](https://github.com/hap
 
 You should be able to do almost anything you need from `config/index.js`. It contains database connection, data fetching, and special operations for custom schemas, like the `search`. The individual routes contain documentation/validation for the route and a function to build the SQL call.
 
-If you are proxying behind Apache, you'll need two proxies to deal with swagger. If you wanted to share your project at `/api`, you would need:
-
-``` bash
-ProxyPass /api http://127.0.0.1:8123
-ProxyPass /swaggerui http://127,0.0.1:8123/swaggerui
-```
-
-You will also need to change `basePath` to `/api` and `jsonPath` to  `/swaggerui/swagger.json` in `config/index.js`.
+When using a web server proxy, it's recommended to use an A-name rather than a relative path, which can break the `hapi-swagger` documentation. Change `config/index.js` `host` to the server name (ex: `api.myserver.com`), and if the proxy is HTTPS, change `config/index.js` `schemes` to `['https']`.
 
 If you pass path parameters that have encoded slashes through Apache (i.e. `%2F`), Apache will be default reject those requests with a 404 (Docs: [AllowEncodedSlashes](https://httpd.apache.org/docs/2.4/mod/core.html#allowencodedslashes)). To fix that, drop this on the bottom of your httpd.conf:
 

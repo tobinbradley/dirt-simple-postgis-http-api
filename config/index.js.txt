@@ -1,12 +1,13 @@
 // There are four parts to the configuration of you REST API:
-// 	basePath: the base documentation path for Swagger (useful for proxying)
+// 	host: the base documentation path for Swagger (useful for proxying)
+//  schemes: change to ['https'] if behind a https proxy
 // 	port: the port for the server
 // 	db: a list of database connection strings
 // 	cache: cache settings for your services
 // 	search: a configuration for the search services
-// 	fetch: functions for fetching data
 //
 // Search return columns must include the following:
+// id       unique identifier for that search type
 // type     the category of search (i.e. "address")
 // label    the return value you want to sort by
 //

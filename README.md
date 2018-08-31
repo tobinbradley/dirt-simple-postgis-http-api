@@ -7,12 +7,12 @@ The Dirt-Simple PostGIS HTTP API is an easy way to expose PostGIS functionality 
 ### Requirements
 
 - [Node](https://nodejs.org/)
-- [PostgreSQL]() with [PostGIS]()
+- [PostgreSQL](https://postgresql.org/) with [PostGIS](https://postgis.net/)
 - A PostgreSQL login for the service that has read access to any tables or views it needs access to, as well as the `geometry_columns` view.
 
 ### Step 1: get the Project
 
-Note: if you don't have [git](), you can download a [zip file](https://github.com/tobinbradley/dirt-simple-postgis-http-api/archive/master.zip) of the project instead.
+Note: if you don't have [git](https://git-scm.com/), you can download a [zip file](https://github.com/tobinbradley/dirt-simple-postgis-http-api/archive/master.zip) of the project instead.
 
 ```bash
 git clone https://github.com/tobinbradley/dirt-simple-postgis-http-api.git dirt
@@ -38,9 +38,9 @@ Set your browser to the documentation URL the command line indicates, the defaul
 
 The real credit for this project goes to the great folks behind the following open source software:
 
-- [PostgreSQL]()
-- [PostGIS]()
-- [Fastify]()
+- [PostgreSQL](https://postgresql.org/)
+- [PostGIS](https://postgis.net/)
+- [Fastify](https://www.fastify.io/)
 
 ### How it works
 

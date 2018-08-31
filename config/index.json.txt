@@ -1,0 +1,9 @@
+{
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "port": 3000,
+  "cache": 3600,
+  "db": "postgres://user:password@server/database"
+}

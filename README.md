@@ -1,57 +1,106 @@
-# Getting Started
+# Dirt-Simple PostGIS HTTP API
 
-The Dirt-Simple PostGIS HTTP API is an easy way to expose geospatial functionality to your applications. It takes simple requests over HTTP and returns JSON, JSONP, or protobuf (Mapbox Vector Tile) to the requester. Although the focus of the project has generally been on exposing PostGIS functionality to web apps, you can use the framework to make an API to any database.
+The Dirt-Simple PostGIS HTTP API is an easy way to expose PostGIS functionality to your applications.
 
-This release uses Node. The previous release, based on PHP, is available in the v1 branch.
+## Getting Started
 
-## Setup
+### Requirements
 
-#### PostgreSQL and PostGIS
+- [Node](https://nodejs.org/)
+- [PostgreSQL]() with [PostGIS]()
+- A PostgreSQL login for the service that has read access to any tables or views it needs access to, as well as the `geometry_columns` view.
 
-You'll need PostgreSQL and PostGIS [set up](http://postgis.net/docs/manual-2.0/postgis_installation.html) with some data in it. Note **the login you use for the API needs read rights to the geometry_columns view and any tables or views you wish to make available**. As this API is designed to be exposed to the web, I wouldn't recommend using a login with write or administrative access to Postgres.
+### Step 1: get the Project
 
-#### Node
+Note: if you don't have [git](), you can download a [zip file](https://github.com/tobinbradley/dirt-simple-postgis-http-api/archive/master.zip) of the project instead.
 
-Install [Node](https://nodejs.org/en/). Then install the project dependencies:
-
-``` bash
+```bash
+git clone https://github.com/tobinbradley/dirt-simple-postgis-http-api.git dirt
+cd dirt
 npm install
 ```
 
-#### Configuration and Start
+### Step 2: add your configuration
 
-Rename `config/index.js.txt` to `config/index.js` and change the connection and other information to reflect your environment. Then start the server.
+Add your Postgres connection information to `config/index.json.txt` and rename it `index.json`. Information on the config options can be found [here](config/README.md).
 
-``` bash
-node .
+### Step 3: fire it up!
+
+```bash
+npm start
 ```
 
-Set your browser to `http://localhost:8123/documentation` to get started. The documentation will allow you to interactively try the services, see the URL that gets built, as well as the results.
+Set your browser to the documentation URL the command line indicates, the default being [http://127.0.0.1:3000/documentation](http://127.0.0.1:3000/documentation).
 
-## Notes
+## Architecture
 
-The project uses the [HAPI](http://hapijs.com/) framework and supports CORS as well as JSONP for elderly IE. JSONP will automatically be returned if a `callback` query string is sent. The services are picked up from the files in the `routes` folder, so anything you add there will automatically be picked up.
+### Due credit
 
-The MVT route requires PostGIS 2.4. If you aren't on 2.4, there's an alternative in the optional_routes folder you can use. Be sure to see the README there.
+The real credit for this project goes to the great folks behind the following open source software:
 
-Code changes, new routes, etc. are only picked up when the service starts. If you want to automatically restart the service on a code change, you can start it via [forever](https://github.com/foreverjs/forever) using a watch option:
+- [PostgreSQL]()
+- [PostGIS]()
+- [Fastify]()
 
-``` bash
-forever --watch --watchDirectory ./path/to/dir ./start/file
+### How it works
+
+At the core of the project is [Fastify](https://www.fastify.io/).
+
+> Fastify is a web framework highly focused on providing the best developer experience with the least overhead and a powerful plugin architecture. It is inspired by Hapi and Express and as far as we know, it is one of the fastest web frameworks in town.
+
+Fastify is written by some of the core Node developers, and it's awesome. A number of Fastify plugins (fastify-autoload, fastify-caching, fastify-compress, fastify-cors, fastify-postgres, and fastify-swagger) are also being leveraged. If you're looking for additional functionality, check out the [Fastify ecosystem](https://www.fastify.io/ecosystem).
+
+All routes are stored in the `routes` folder and are automatically loaded on start. Check out the [routes readme](routes/README.md) for more information.
+
+## Tips and tricks
+
+### Database
+
+Your Postgres login will need select rights to any tables or views it should be able to access, **as well as the `geometry_columns` view**. For security, it should _only_ have read rights to anything in the database, unless you plan to specifically add a route that writes to a table.
+
+Dirt uses connection pooling to Postgres, minimizing database connections.
+
+### Mapbox vector tiles
+
+The `mvt` route serves up Mapbox Vector Tiles. The layer name in the return protobuf will be the same as the table name passed as input. Here's an example of using both `geojson` and `mvt` routes with Mapbox GL JS.
+
+```javascript
+map.on('load', function() {
+  map.addLayer({
+    id: 'testlayer',
+    source: {
+      type: 'vector',
+      tiles: ['http://localhost:3000/v1/mvt/voter_precinct/{z}/{x}/{y}'],
+      maxzoom: 14,
+      minzoom: 5
+    },
+    'source-layer': 'voter_precinct',
+    type: 'fill',
+    minzoom: 5,
+    paint: {
+      'fill-color': '#088',
+      'fill-outline-color': '#666'
+    }
+  })
+
+  map.addLayer({
+    id: 'points',
+    type: 'circle',
+    source: {
+      type: 'geojson',
+      data: 'http://localhost:3000/v1/geojson/voter_polling_location'
+    },
+    paint: {
+      'circle-radius': 2,
+      'circle-color': '#bada55'
+    }
+  })
+})
 ```
 
-If your code change broke something, the service won't be able to restart, so this is risky.
+### Miscellaneous errata
 
-The documentation is built using [Swagger](https://github.com/glennjones/hapi-swagger) based on descriptions in the code. Check out one of the files in `routes` and you'll see where it comes from.
-
-Input validation and default values are handled via [joi](https://github.com/hapijs/joi), which allows for deep checking. The SQL queries are built using [Squel](https://hiddentao.github.io/squel/). While SQL isn't hard to write, complex string manipulation is ugly and error/injection prone, and Squel helps greatly with both of those things.
-
-You should be able to do almost anything you need from `config/index.js`. It contains database connection, data fetching, and special operations for custom schemas, like the `search`. The individual routes contain documentation/validation for the route and a function to build the SQL call.
-
-When using a web server proxy, it's recommended to use an A-name rather than a relative path, which can break the `hapi-swagger` documentation. Change `config/index.js` `host` to the server name (ex: `api.myserver.com`), and if the proxy is HTTPS, change `config/index.js` `schemes` to `['https']`.
-
-If you pass path parameters that have encoded slashes through Apache (i.e. `%2F`), Apache will be default reject those requests with a 404 (Docs: [AllowEncodedSlashes](https://httpd.apache.org/docs/2.4/mod/core.html#allowencodedslashes)). To fix that, drop this on the bottom of your httpd.conf:
-
-```
-AllowEncodedSlashes NoDecode
-```
+- If you modify code or add a route, dirt will not see it until dirt is restarted.
+- The `mvt` route requires PostGIS 2.4 or higher.
+- If you are using apache or nginx as a proxy, it's recommended to use an A-name rather than a relative path, which could lead to bad links in the Swagger documentation page.
+- If you pass path parameters that have encoded slashes through Apache (i.e. `%2F`), Apache by default will reject those requests with a 404 (Docs: [AllowEncodedSlashes](https://httpd.apache.org/docs/2.4/mod/core.html#allowencodedslashes)). To fix that, add `AllowEncodedSlashes NoDecode` to the end of your httpd.conf:

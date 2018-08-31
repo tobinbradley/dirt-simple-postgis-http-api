@@ -8,7 +8,7 @@ The Dirt-Simple PostGIS HTTP API is an easy way to expose PostGIS functionality 
 
 - [Node](https://nodejs.org/)
 - [PostgreSQL](https://postgresql.org/) with [PostGIS](https://postgis.net/)
-- A PostgreSQL login for the service that has read access to any tables or views it needs access to, as well as the `geometry_columns` view.
+- A PostgreSQL login for the service that has select rights to any tables or views you want to expose to dirt, as well as the `geometry_columns` view.
 
 ### Step 1: get the Project
 
@@ -98,9 +98,9 @@ map.on('load', function() {
 })
 ```
 
-### Miscellaneous errata
+### Tips
 
 - If you modify code or add a route, dirt will not see it until dirt is restarted.
 - The `mvt` route requires PostGIS 2.4 or higher.
 - If you are using apache or nginx as a proxy, it's recommended to use an A-name rather than a relative path, which could lead to bad links in the Swagger documentation page.
-- If you pass path parameters that have encoded slashes through Apache (i.e. `%2F`), Apache by default will reject those requests with a 404 (Docs: [AllowEncodedSlashes](https://httpd.apache.org/docs/2.4/mod/core.html#allowencodedslashes)). To fix that, add `AllowEncodedSlashes NoDecode` to the end of your httpd.conf:
+- If you pass path parameters that have encoded slashes through Apache (i.e. `%2F`), Apache by default will reject those requests with a 404 (Docs: [AllowEncodedSlashes](https://httpd.apache.org/docs/2.4/mod/core.html#allowencodedslashes)). To fix that, add `AllowEncodedSlashes NoDecode` to the end of your httpd.conf.

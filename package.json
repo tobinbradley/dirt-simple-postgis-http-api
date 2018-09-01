@@ -1,7 +1,7 @@
 {
   "name": "dirt-simple-postgis-http-api",
   "version": "3.0.0",
-  "description": "The Dirt-Simple PostGIS HTTP API is an easy way to expose PostGIS functionality to your applications.",
+  "description": "The Dirt-Simple PostGIS HTTP API exposes PostGIS functionality to your applications over HTTP.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"

@@ -102,5 +102,4 @@ map.on('load', function() {
 
 - If you modify code or add a route, dirt will not see it until dirt is restarted.
 - The `mvt` route requires PostGIS 2.4 or higher.
-- If you are using apache or nginx as a proxy, it's recommended to use an A-name via your DNS provider (i.e. `http://dirt.myserver.com`) rather than a relative path, as that can lead to bad links in the Swagger documentation page.
 - If you pass path parameters that have encoded slashes through Apache (i.e. `%2F`), Apache by default will reject those requests with a 404 (Docs: [AllowEncodedSlashes](https://httpd.apache.org/docs/2.4/mod/core.html#allowencodedslashes)). To fix that, add `AllowEncodedSlashes NoDecode` to the end of your httpd.conf.

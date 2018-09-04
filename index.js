@@ -39,6 +39,7 @@ fastify.register(require('fastify-swagger'), {
       description: 'Source code on Github'
     },
     schemes: config.schemes,
+    host: config.swaggerpath,
     tags: [{
       name: 'api',
       description: 'code related end-points'

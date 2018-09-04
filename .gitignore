@@ -2,3 +2,4 @@ config/index.json
 .directory
 node_modules
 TODO.md
+.vscode

@@ -44,7 +44,7 @@ const sql = (params, query) => {
         ${query.geom_column},
         ST_Transform(
           ST_MakeEnvelope(${bounds[0]}, ${bounds[1]}, ${bounds[2]}, ${bounds[3]}, 4326), 
-          find_srid('', '${params.table}', '${query.geom_column}')
+          (SELECT ST_SRID(${query.geom_column}) FROM ${params.table} LIMIT 1)
         )
       )
     ` : ''}

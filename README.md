@@ -8,7 +8,7 @@ The Dirt-Simple PostGIS HTTP API, or `dirt`, exposes PostGIS functionality to yo
 
 - [Node](https://nodejs.org/)
 - [PostgreSQL](https://postgresql.org/) with [PostGIS](https://postgis.net/)
-- A PostgreSQL login for the service that has select rights to any tables or views you want to expose to dirt, as well as the `geometry_columns` view.
+- A PostgreSQL login for the service that has select rights to any tables or views you want to expose to dirt.
 
 ### Step 1: get the goodies
 
@@ -56,7 +56,7 @@ All routes are stored in the `routes` folder and are automatically loaded on sta
 
 ### Database
 
-Your Postgres login will need select rights to any tables or views it should be able to access, **as well as the `geometry_columns` view**. For security, it should _only_ have select rights unless you plan to specifically add a route that writes to a table.
+Your Postgres login will need select rights to any tables or views it should be able to access. For security, it should _only_ have select rights unless you plan to specifically add a route that writes to a table.
 
 Dirt uses connection pooling, minimizing database connections.
 

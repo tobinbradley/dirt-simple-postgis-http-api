@@ -8,7 +8,7 @@ const sql = (params, query) => {
     ST_Distance(
       ST_Transform(
         st_setsrid(st_makepoint(${x}, ${y}), ${srid}),
-        find_srid('', '${params.table}', '${query.geom_column}')
+        (SELECT ST_SRID(${query.geom_column}) FROM ${params.table} LIMIT 1)
       ),
       ${query.geom_column}
     ) as distance
@@ -22,7 +22,7 @@ const sql = (params, query) => {
   ORDER BY 
     ${query.geom_column} <-> ST_Transform(
       st_setsrid(st_makepoint(${x}, ${y}), ${srid}),
-      find_srid('', '${params.table}', '${query.geom_column}')
+      (SELECT ST_SRID(${query.geom_column}) FROM ${params.table} LIMIT 1)
     )
 
   LIMIT ${query.limit}

@@ -14,8 +14,11 @@ const sql = (params, query) => {
       ${query.geom_column},      
       ST_Transform(
         st_setsrid(
-          st_makepoint(${x}, ${y}), ${srid}),
-          find_srid('', '${params.table}', '${query.geom_column}')),
+          st_makepoint(${x}, ${y}), 
+          ${srid}
+        ),
+        (SELECT ST_SRID(${query.geom_column}) FROM ${params.table} LIMIT 1)
+      ),
       ${query.distance}
     )
     -- Optional Filter

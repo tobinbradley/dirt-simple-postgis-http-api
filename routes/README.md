@@ -155,6 +155,6 @@ Route versioning is handled by the final line in the file.
 module.exports.autoPrefix = '/v1'
 ```
 
-This value is added to the route as a prefix,such as `http://localhost:3000/v1/list_layers`. Using a prefix allows for easy versioning if a route is modified by incrementing the number. If a `v1` and `v2` exist for the same route, they will both be documented.
+This value is added to the route as a prefix, i.e. `http://localhost:3000/v1/list_layers`. Using a prefix allows for easy versioning if a route is modified by incrementing the number. If a `v1` and `v2` exist for the same route, they will both be documented.
 
-If you create a new route version and wish to discourage the use of the old route, you can add `hide: true` to the old route's schema so it no longer appears on the documentation page.
+If you create a new route version and wish to discourage the use of the old route, you can add `hide: true` to the old route's schema and it will no longer appear in the Swagger documentation.

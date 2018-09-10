@@ -13,7 +13,7 @@
     "fastify": "^1.11.1",
     "fastify-autoload": "^0.5.0",
     "fastify-caching": "^3.0.0",
-    "fastify-compress": "^0.6.0",
+    "fastify-compress": "^0.7.0",
     "fastify-cors": "^0.1.0",
     "fastify-postgres": "^1.1.0",
     "fastify-swagger": "^0.15.0"

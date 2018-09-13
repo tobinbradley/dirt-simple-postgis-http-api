@@ -36,7 +36,7 @@ The `params` function argument contains route parameters (i.e. parts of the URL 
 Compound route components, such as the X,Y,SRID argument of a point, are split apart in this section.
 
 ```javascript
-/ route query
+// route query
 const sql = (params, query) => {
   const [x, y, srid] = params.point.match(/^((-?\d+\.?\d+)(,-?\d+\.?\d+)(,[0-9]{4}))/)[0].split(',')
 

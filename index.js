@@ -25,7 +25,7 @@ fastify.register(
 // CORS
 fastify.register(require('fastify-cors'))
 
-// swagger docs
+// swagger server
 fastify.register(require('fastify-swagger'), {
   exposeRoute: true,
   swagger: {
@@ -39,7 +39,7 @@ fastify.register(require('fastify-swagger'), {
       description: 'Source code on Github'
     },
     schemes: config.schemes,
-    host: config.swaggerpath,
+    basePath: config.swagger.basePath,
     tags: [{
       name: 'api',
       description: 'code related end-points'
@@ -52,6 +52,7 @@ fastify.register(require('fastify-swagger'), {
     }]
   }
 })
+
 
 // routes
 fastify.register(require('fastify-autoload'), {
@@ -66,5 +67,4 @@ fastify.listen(config.port, function (err, address) {
     process.exit(1)
   }
   console.info(`Server listening on ${address}`)
-  console.info(`Documentation available at ${address}/documentation`)
 })

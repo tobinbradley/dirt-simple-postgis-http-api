@@ -30,7 +30,7 @@ Add your Postgres connection information to `config/index.json.txt` and rename i
 npm start
 ```
 
-Set your browser to the documentation URL the command line indicates, the default being [http://127.0.0.1:3000/documentation](http://127.0.0.1:3000/documentation).
+To view interactive documentation, head to [http://127.0.0.1:3000/](http://127.0.0.1:3000/).
 
 ## Architecture
 

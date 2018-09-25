@@ -38,8 +38,7 @@
 
       // Build a system
       const ui = SwaggerUIBundle({
-        url: resolveUrl('./documentation/json'),
-        oauth2RedirectUrl: resolveUrl('./oauth2-redirect.html'),
+        url: "../documentation/json",
         dom_id: '#swagger-ui',
         deepLinking: true,
         presets: [
@@ -53,12 +52,6 @@
       })
 
       window.ui = ui
-
-      function resolveUrl(url) {
-        const anchor = document.createElement('a')
-        anchor.href = url
-        return anchor.href
-      }
     }
   </script>
 </body>

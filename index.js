@@ -7,7 +7,7 @@ fastify.register(require('fastify-postgres'), {
   connectionString: config.db
 })
 
-// compression
+// compression - add x-protobuf
 fastify.register(
   require('fastify-compress'), {
     customTypes: /^text\/|\+json$|\+text$|\+xml|x-protobuf$/
@@ -25,40 +25,16 @@ fastify.register(
 // CORS
 fastify.register(require('fastify-cors'))
 
-// swagger server
+// swagger
 fastify.register(require('fastify-swagger'), {
   exposeRoute: true,
-  swagger: {
-    info: {
-      title: 'Dirst Simple Postgres HTTP API',
-      description: 'The Dirt-Simple PostGIS HTTP API is an easy way to expose geospatial functionality to your applications. It takes simple requests over HTTP and returns JSON, JSONP, or protobuf (Mapbox Vector Tile) to the requester. Although the focus of the project has generally been on exposing PostGIS functionality to web apps, you can use the framework to make an API to any database.',
-      version: '3'
-    },
-    externalDocs: {
-      url: 'https://github.com/tobinbradley/dirt-simple-postgis-http-api',
-      description: 'Source code on Github'
-    },
-    schemes: config.schemes,
-    basePath: config.swagger.basePath,
-    tags: [{
-      name: 'api',
-      description: 'code related end-points'
-    }, {
-      name: 'feature',
-      description: 'features in common formats for direct mapping.'
-    }, {
-      name: 'meta',
-      description: 'meta information for tables and views.'
-    }]
-  }
+  swagger: config.swagger
 })
-
 
 // routes
 fastify.register(require('fastify-autoload'), {
   dir: path.join(__dirname, 'routes')
 })
-
 
 // Launch server
 fastify.listen(config.port, function (err, address) {

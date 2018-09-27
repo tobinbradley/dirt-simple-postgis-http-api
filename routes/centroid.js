@@ -22,8 +22,8 @@ const sql = (params, query) => {
   -- Optional filter
   ${query.filter ? `WHERE ${query.filter}` : ''}
 
-  `;
-};
+  `
+}
 
 // route schema
 const schema = {
@@ -57,7 +57,7 @@ const schema = {
       default: false
     }
   }
-};
+}
 
 // create route
 module.exports = function (fastify, opts, next) {
@@ -66,7 +66,7 @@ module.exports = function (fastify, opts, next) {
     url: '/centroid/:table',
     schema: schema,
     handler: function (request, reply) {
-      fastify.pg.connect(onConnect);
+      fastify.pg.connect(onConnect)
 
       function onConnect(err, client, release) {
         if (err)
@@ -74,19 +74,19 @@ module.exports = function (fastify, opts, next) {
             statusCode: 500,
             error: 'Internal Server Error',
             message: 'unable to connect to database server'
-          });
+          })
 
         client.query(sql(request.params, request.query), function onResult(
           err,
           result
         ) {
-          release();
-          reply.send(err || result.rows);
-        });
+          release()
+          reply.send(err || result.rows)
+        })
       }
     }
-  });
-  next();
-};
+  })
+  next()
+}
 
-module.exports.autoPrefix = '/v1';
+module.exports.autoPrefix = '/v1'

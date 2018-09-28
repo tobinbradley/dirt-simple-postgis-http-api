@@ -31,6 +31,11 @@ fastify.register(require('fastify-swagger'), {
   swagger: config.swagger
 })
 
+// static documentation path
+fastify.register(require('fastify-static'), {
+  root: path.join(__dirname, 'documentation')
+})
+
 // routes
 fastify.register(require('fastify-autoload'), {
   dir: path.join(__dirname, 'routes')

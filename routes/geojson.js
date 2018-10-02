@@ -73,7 +73,7 @@ const schema = {
     },
     columns: {
       type: 'string',
-      description: 'Columns to return as GeoJSON properites. The default is no colums.'
+      description: 'Columns to return as GeoJSON properites. The default is no columns. <br/><em>Note: the geometry column should not be listed here, and columns must be explicitly named.</em>'
     },
     filter: {
       type: 'string',

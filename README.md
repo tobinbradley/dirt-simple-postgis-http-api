@@ -67,7 +67,7 @@ The `mvt` route serves Mapbox Vector Tiles. The layer name in the returned proto
 ```javascript
 map.on('load', function() {
   map.addLayer({
-    id: 'testlayer',
+    id: 'dirt-mvt',
     source: {
       type: 'vector',
       tiles: ['http://localhost:3000/v1/mvt/voter_precinct/{z}/{x}/{y}'],
@@ -84,7 +84,7 @@ map.on('load', function() {
   })
 
   map.addLayer({
-    id: 'points',
+    id: 'dirt-geojson',
     type: 'circle',
     source: {
       type: 'geojson',

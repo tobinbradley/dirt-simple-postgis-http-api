@@ -1,11 +1,11 @@
-const SphericalMercator = require('@mapbox/sphericalmercator');
+const SphericalMercator = require('@mapbox/sphericalmercator')
 const sm = new SphericalMercator({
   size: 256
-});
+})
 
 // route query
 const sql = (params, query) => {
-  let bounds = sm.bbox(params.x, params.y, params.z);
+  let bounds = sm.bbox(params.x, params.y, params.z)
 
   return `
   SELECT 
@@ -22,11 +22,28 @@ const sql = (params, query) => {
         true
       ) geom
 
-    FROM 
-      ${params.table}
+    FROM (
+      SELECT
+        ${query.columns ? `${query.columns},` : '' }
+        ${query.geom_column},
+        srid
+      FROM 
+        ${params.table},
+        (SELECT ST_SRID(${query.geom_column}) AS srid FROM ${params.table} LIMIT 1) a
+        
+      WHERE
+        ST_Intersects(
+          ${query.geom_column},
+          ST_transform(
+            ST_MakeEnvelope(-80.771484375, 35.24561909420681, -80.74951171875, 35.263561862152095, 4326), 
+            srid
+          )
+        )
 
-    -- Optional Filter
-    ${query.filter ? `WHERE ${query.filter}` : '' }
+        -- Optional Filter
+        ${query.filter ? `AND ${query.filter}` : '' }
+    ) r
+
   ) q
   `
 }
@@ -95,13 +112,13 @@ module.exports = function (fastify, opts, next) {
             if (err) {
               reply.send(err)
             } else {
-              const mvt = result.rows[0].st_asmvt;
+              const mvt = result.rows[0].st_asmvt
               if (mvt.length === 0) {
                 reply.code(204)
               }
               reply
                 .header('Content-Type', 'application/x-protobuf')
-                .send(mvt);
+                .send(mvt)
             }
           }
         )

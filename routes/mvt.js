@@ -35,7 +35,7 @@ const sql = (params, query) => {
         ST_Intersects(
           ${query.geom_column},
           ST_transform(
-            ST_MakeEnvelope(-80.771484375, 35.24561909420681, -80.74951171875, 35.263561862152095, 4326), 
+            ST_MakeEnvelope(${bounds[0]}, ${bounds[1]}, ${bounds[2]}, ${bounds[3]}, 4326), 
             srid
           )
         )

@@ -1,8 +1,11 @@
-const tile2bbox = require('../lib/tile2bbox')
+const sm = require('@mapbox/sphericalmercator')
+const merc = new sm({
+  size: 256
+});
 
 // route query
 const sql = (params, query) => {
-  let bounds = tile2bbox(params.x, params.y, params.z)
+  let bounds = merc.bbox(params.x, params.y, params.z, false, '900913')
 
   return `
   SELECT 
@@ -12,11 +15,8 @@ const sql = (params, query) => {
     SELECT
       ${query.columns ? `${query.columns},` : '' }
       ST_AsMVTGeom(
-        ST_Transform(${query.geom_column}, 4326),
-        ST_MakeEnvelope(${bounds.join()}, 4326),
-        4096,
-        256,
-        true
+        ST_Transform(${query.geom_column}, 3857),
+        ST_MakeBox2D(ST_Point(${bounds[0]}, ${bounds[1]}), ST_Point(${bounds[2]}, ${bounds[3]}))
       ) geom
 
     FROM (
@@ -29,12 +29,10 @@ const sql = (params, query) => {
         (SELECT ST_SRID(${query.geom_column}) AS srid FROM ${params.table} LIMIT 1) a
         
       WHERE
-        ST_Intersects(
-          ${query.geom_column},
-          ST_transform(
-            ST_MakeEnvelope(${bounds.join()}, 4326), 
-            srid
-          )
+        ${query.geom_column} && 
+        ST_transform(
+          ST_MakeEnvelope(${bounds.join()}, 3857), 
+          srid
         )
 
         -- Optional Filter

@@ -9,7 +9,6 @@
   "author": "Tobin Bradley",
   "license": "MIT",
   "dependencies": {
-    "@mapbox/sphericalmercator": "^1.1.0",
     "fastify": "^1.13.0",
     "fastify-autoload": "^0.5.1",
     "fastify-caching": "^3.0.0",

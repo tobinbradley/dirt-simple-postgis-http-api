@@ -12,7 +12,7 @@ const sql = (params, query) => {
     SELECT
       ${query.columns ? `${query.columns},` : '' }
       ST_AsMVTGeom(
-        ${query.geom_column},
+        ST_Transform(${query.geom_column}, 4326),
         ST_MakeEnvelope(${bounds.join()}, 4326),
         4096,
         256,

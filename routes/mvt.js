@@ -1,11 +1,8 @@
-const SphericalMercator = require('@mapbox/sphericalmercator')
-const sm = new SphericalMercator({
-  size: 256
-})
+const tile2bbox = require('../lib/tile2bbox')
 
 // route query
 const sql = (params, query) => {
-  let bounds = sm.bbox(params.x, params.y, params.z)
+  let bounds = tile2bbox(params.x, params.y, params.z)
 
   return `
   SELECT 
@@ -15,8 +12,8 @@ const sql = (params, query) => {
     SELECT
       ${query.columns ? `${query.columns},` : '' }
       ST_AsMVTGeom(
-        ST_Transform(${query.geom_column}, 4326),
-        ST_MakeEnvelope(${bounds[0]}, ${bounds[1]}, ${bounds[2]}, ${bounds[3]}, 4326),
+        ${query.geom_column},
+        ST_MakeEnvelope(${bounds.join()}, 4326),
         4096,
         256,
         true
@@ -35,7 +32,7 @@ const sql = (params, query) => {
         ST_Intersects(
           ${query.geom_column},
           ST_transform(
-            ST_MakeEnvelope(${bounds[0]}, ${bounds[1]}, ${bounds[2]}, ${bounds[3]}, 4326), 
+            ST_MakeEnvelope(${bounds.join()}, 4326), 
             srid
           )
         )

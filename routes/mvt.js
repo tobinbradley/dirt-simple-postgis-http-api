@@ -1,7 +1,7 @@
 const sm = require('@mapbox/sphericalmercator')
 const merc = new sm({
   size: 256
-});
+})
 
 // route query
 const sql = (params, query) => {
@@ -13,40 +13,44 @@ const sql = (params, query) => {
   
   FROM (
     SELECT
-      ${query.columns ? `${query.columns},` : '' }
+      ${query.columns ? `${query.columns},` : ''}
       ST_AsMVTGeom(
         ST_Transform(${query.geom_column}, 3857),
-        ST_MakeBox2D(ST_Point(${bounds[0]}, ${bounds[1]}), ST_Point(${bounds[2]}, ${bounds[3]}))
+        ST_MakeBox2D(ST_Point(${bounds[0]}, ${bounds[1]}), ST_Point(${
+    bounds[2]
+  }, ${bounds[3]}))
       ) geom
 
     FROM (
       SELECT
-        ${query.columns ? `${query.columns},` : '' }
+        ${query.columns ? `${query.columns},` : ''}
         ${query.geom_column},
         srid
       FROM 
         ${params.table},
-        (SELECT ST_SRID(${query.geom_column}) AS srid FROM ${params.table} LIMIT 1) a
+        (SELECT ST_SRID(${query.geom_column}) AS srid FROM ${
+    params.table
+  } LIMIT 1) a
         
-      WHERE
-        ${query.geom_column} && 
+      WHERE       
         ST_transform(
           ST_MakeEnvelope(${bounds.join()}, 3857), 
           srid
-        )
+        ) && 
+        ${query.geom_column}
 
         -- Optional Filter
-        ${query.filter ? `AND ${query.filter}` : '' }
+        ${query.filter ? `AND ${query.filter}` : ''}
     ) r
 
   ) q
   `
 }
 
-
 // route schema
 const schema = {
-  description: 'Return table as Mapbox Vector Tile (MVT). The layer name returned is the name of the table.',
+  description:
+    'Return table as Mapbox Vector Tile (MVT). The layer name returned is the name of the table.',
   tags: ['feature'],
   summary: 'return MVT',
   params: {
@@ -75,7 +79,8 @@ const schema = {
     },
     columns: {
       type: 'string',
-      description: 'Optional columns to return with MVT. The default is no columns.'
+      description:
+        'Optional columns to return with MVT. The default is no columns.'
     },
     filter: {
       type: 'string',
@@ -85,38 +90,37 @@ const schema = {
 }
 
 // create route
-module.exports = function (fastify, opts, next) {
+module.exports = function(fastify, opts, next) {
   fastify.route({
     method: 'GET',
     url: '/mvt/:table/:z/:x/:y',
     schema: schema,
-    handler: function (request, reply) {
+    handler: function(request, reply) {
       fastify.pg.connect(onConnect)
 
       function onConnect(err, client, release) {
-        if (err) return reply.send({
-          "statusCode": 500,
-          "error": "Internal Server Error",
-          "message": "unable to connect to database server"
-        })
+        if (err)
+          return reply.send({
+            statusCode: 500,
+            error: 'Internal Server Error',
+            message: 'unable to connect to database server'
+          })
 
-        client.query(
-          sql(request.params, request.query),
-          function onResult(err, result) {
-            release()
-            if (err) {
-              reply.send(err)
-            } else {
-              const mvt = result.rows[0].st_asmvt
-              if (mvt.length === 0) {
-                reply.code(204)
-              }
-              reply
-                .header('Content-Type', 'application/x-protobuf')
-                .send(mvt)
+        client.query(sql(request.params, request.query), function onResult(
+          err,
+          result
+        ) {
+          release()
+          if (err) {
+            reply.send(err)
+          } else {
+            const mvt = result.rows[0].st_asmvt
+            if (mvt.length === 0) {
+              reply.code(204)
             }
+            reply.header('Content-Type', 'application/x-protobuf').send(mvt)
           }
-        )
+        })
       }
     }
   })

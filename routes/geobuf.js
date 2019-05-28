@@ -114,9 +114,7 @@ module.exports = function(fastify, opts, next) {
           if (err) {
             reply.send(err)
           } else {
-            if (
-              !result.rows[0].st_asgeobuf
-            ) {
+            if (!result.rows[0].st_asgeobuf) {
               reply.code(204)
             }
             reply

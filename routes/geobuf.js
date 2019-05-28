@@ -114,11 +114,14 @@ module.exports = function(fastify, opts, next) {
           if (err) {
             reply.send(err)
           } else {
-            const geobuf = result.rows[0].st_asgeobuf
-            if (geobuf.length === 0) {
+            if (
+              !result.rows[0].st_asgeobuf
+            ) {
               reply.code(204)
             }
-            reply.header('Content-Type', 'application/x-protobuf').send(geobuf)
+            reply
+              .header('Content-Type', 'application/x-protobuf')
+              .send(result.rows[0].st_asgeobuf)
           }
         })
       }

@@ -42,7 +42,7 @@ fastify.register(require('fastify-autoload'), {
 })
 
 // Launch server
-fastify.listen(config.port, function (err, address) {
+fastify.listen(config.port, config.host || 'localhost', function (err, address) {
   if (err) {
     console.log(err)
     process.exit(1)

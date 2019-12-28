@@ -5,6 +5,7 @@
   "db": "postgres://user:password@server/database",
   "cache": 3600,
   "port": 3000,
+  "host": "localhost",
   "swagger": {
     "basePath": null,
     "externalDocs": {
@@ -46,6 +47,12 @@
 ### port
 
 `port` sets the port number the server runs on.
+
+### host
+
+The server will bind to the `host` name or IP address that is supplied.
+To listen on all available IPv4 interfaces it should be "0.0.0.0" or "::" to accept connections on all IPv6 addresses.
+Default value is "localhost".
 
 ### swagger
 

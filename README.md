@@ -2,6 +2,10 @@
 
 The Dirt-Simple PostGIS HTTP API, or `dirt`, exposes PostGIS functionality to your applications over HTTP.
 
+## Important Note!
+
+**Dirt is now optimized for Postgis 3. If you're using Postgis 2.x, use the [postgis2x](https://github.com/tobinbradley/dirt-simple-postgis-http-api/tree/postgis2x) branch.**
+
 ## Getting started
 
 ### Requirements
@@ -100,6 +104,6 @@ map.on('load', function() {
 
 ### Tips
 
+- Dirt is now optimized for PostGIS 3+. Some functions will work on earlier versions, but some (list_layers, geobuf, geojson, mvt in particular) will not.
 - If you modify code or add a route, dirt will not see it until dirt is restarted.
-- The `mvt` route requires PostGIS 2.4 or higher.
 - If you pass path parameters that have encoded slashes through Apache (i.e. `%2F`), Apache by default will reject those requests with a 404 (Docs: [AllowEncodedSlashes](https://httpd.apache.org/docs/2.4/mod/core.html#allowencodedslashes)). To fix that, add `AllowEncodedSlashes NoDecode` to the end of your httpd.conf.

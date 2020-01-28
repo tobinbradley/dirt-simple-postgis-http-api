@@ -1,20 +1,11 @@
-const sm = require('@mapbox/sphericalmercator')
-const merc = new sm({
-  size: 256
-})
-
 // route query
 const sql = (params, query) => {
   let bounds = query.bounds ? query.bounds.split(',').map(Number) : null
-  bounds && bounds.length === 3
-    ? (bounds = merc.bbox(bounds[1], bounds[2], bounds[0]))
-    : null
 
   return `
-
-  SELECT 
+  SELECT
     ST_AsGeobuf(q, 'geom')
-  
+
   FROM
   (
 
@@ -36,19 +27,26 @@ const sql = (params, query) => {
     ${query.filter || bounds ? 'WHERE' : ''}
     ${query.filter ? `${query.filter}` : ''}
     ${query.filter && bounds ? 'AND' : ''}
-    ${
-      bounds
-        ? `      
-          ${query.geom_column} &&
-          ST_Transform(
-            ST_MakeEnvelope(${bounds.join()}, 4326), 
-            srid
-          )      
-        `
-        : ''
+    ${bounds && bounds.length === 4 ?
+      `${query.geom_column} &&
+      ST_Transform(
+        ST_MakeEnvelope(${bounds.join()}, 4326),
+        srid
+      )
+      `
+      : ''
+    }
+    ${bounds && bounds.length === 3 ?
+      `${query.geom_column} &&
+      ST_Transform(
+        ST_TileEnvelope(${bounds.join()}),
+        srid
+      )
+      `
+      : ''
     }
 
-  ) as q; 
+  ) as q;
 
   `
 }

@@ -1,49 +1,26 @@
-const sm = require('@mapbox/sphericalmercator')
-const merc = new sm({
-  size: 256
-})
-
 // route query
 const sql = (params, query) => {
-  let bounds = merc.bbox(params.x, params.y, params.z, false, '900913')
-
   return `
-  SELECT 
-    ST_AsMVT(q, '${params.table}', 4096, 'geom')
-  
-  FROM (
-    SELECT
-      ${query.columns ? `${query.columns},` : ''}
-      ST_AsMVTGeom(
-        ST_Transform(${query.geom_column}, 3857),
-        ST_MakeBox2D(ST_Point(${bounds[0]}, ${bounds[1]}), ST_Point(${
-    bounds[2]
-  }, ${bounds[3]}))
-      ) geom
-
-    FROM (
+    WITH mvtgeom as (
       SELECT
-        ${query.columns ? `${query.columns},` : ''}
-        ${query.geom_column},
-        srid
-      FROM 
+        ST_AsMVTGeom (
+          ST_Transform(${query.geom_column}, 3857),
+          ST_TileEnvelope(${params.z}, ${params.x}, ${params.y})
+        ) as geom
+        ${query.columns ? `, ${query.columns}` : ''}
+      FROM
         ${params.table},
-        (SELECT ST_SRID(${query.geom_column}) AS srid FROM ${
-    params.table
-  } LIMIT 1) a
-        
-      WHERE       
-        ST_transform(
-          ST_MakeEnvelope(${bounds.join()}, 3857), 
-          srid
-        ) && 
-        ${query.geom_column}
-
-        -- Optional Filter
-        ${query.filter ? `AND ${query.filter}` : ''}
-    ) r
-
-  ) q
+        (SELECT ST_SRID(${query.geom_column}) AS srid FROM ${params.table} LIMIT 1) a
+      WHERE
+        ST_Intersects(
+          geom,
+          ST_Transform(
+            ST_TileEnvelope(${params.z}, ${params.x}, ${params.y}),
+            srid
+          )
+        )
+    )
+    SELECT ST_AsMVT(mvtgeom.*) AS mvt from mvtgeom;
   `
 }
 
@@ -114,7 +91,7 @@ module.exports = function(fastify, opts, next) {
           if (err) {
             reply.send(err)
           } else {
-            const mvt = result.rows[0].st_asmvt
+            const mvt = result.rows[0].mvt
             if (mvt.length === 0) {
               reply.code(204)
             }

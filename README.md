@@ -7,7 +7,7 @@ The Dirt-Simple PostGIS HTTP API, or `dirt`, exposes PostGIS functionality to yo
 ### Requirements
 
 - [Node](https://nodejs.org/)
-- [PostgreSQL](https://postgresql.org/) with [PostGIS](https://postgis.net/)
+- [PostgreSQL](https://postgresql.org/) with [PostGIS 3](https://postgis.net/)
 - A PostgreSQL login for the service that has select rights to any tables or views you want to expose to dirt.
 
 ### Step 1: get the goodies

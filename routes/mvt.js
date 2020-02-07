@@ -87,7 +87,7 @@ module.exports = function(fastify, opts, next) {
             error: 'Internal Server Error',
             message: 'unable to connect to database server'
           })
-          console.log(sql(request.params, request.query))
+
         client.query(sql(request.params, request.query), function onResult(
           err,
           result

@@ -20,7 +20,7 @@ const sql = (params, query) => {
           )
         )
     )
-    SELECT ST_AsMVT(mvtgeom.*) AS mvt from mvtgeom;
+    SELECT ST_AsMVT(mvtgeom.*, '${params.table}', 4096, 'geom' ${query.id_column ? `, '${query.id_column}'` : ''}) AS mvt from mvtgeom;
   `
 }
 
@@ -59,6 +59,11 @@ const schema = {
       description:
         'Optional columns to return with MVT. The default is no columns.'
     },
+    id_column: {
+      type: 'string',
+      description:
+        'Optional id column name. This column must be included with the columns option.'
+    },
     filter: {
       type: 'string',
       description: 'Optional filter parameters for a SQL WHERE statement.'
@@ -82,7 +87,7 @@ module.exports = function(fastify, opts, next) {
             error: 'Internal Server Error',
             message: 'unable to connect to database server'
           })
-
+          console.log(sql(request.params, request.query))
         client.query(sql(request.params, request.query), function onResult(
           err,
           result

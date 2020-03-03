@@ -8,9 +8,12 @@ const sql = (params, query) => {
           ST_TileEnvelope(${params.z}, ${params.x}, ${params.y})
         ) as geom
         ${query.columns ? `, ${query.columns}` : ''}
+        ${query.id_column ? `, ${query.id_column}` : ''}
       FROM
         ${params.table},
-        (SELECT ST_SRID(${query.geom_column}) AS srid FROM ${params.table} LIMIT 1) a
+        (SELECT ST_SRID(${query.geom_column}) AS srid FROM ${
+    params.table
+  } LIMIT 1) a
       WHERE
         ST_Intersects(
           geom,
@@ -20,7 +23,9 @@ const sql = (params, query) => {
           )
         )
     )
-    SELECT ST_AsMVT(mvtgeom.*, '${params.table}', 4096, 'geom' ${query.id_column ? `, '${query.id_column}'` : ''}) AS mvt from mvtgeom;
+    SELECT ST_AsMVT(mvtgeom.*, '${params.table}', 4096, 'geom' ${
+    query.id_column ? `, '${query.id_column}'` : ''
+  }) AS mvt from mvtgeom;
   `
 }
 
@@ -51,7 +56,7 @@ const schema = {
   querystring: {
     geom_column: {
       type: 'string',
-      description: 'The geometry column of the table.',
+      description: 'Optional geometry column of the table. The default is geom.',
       default: 'geom'
     },
     columns: {
@@ -62,7 +67,7 @@ const schema = {
     id_column: {
       type: 'string',
       description:
-        'Optional id column name. This column must be included with the columns option.'
+        'Optional id column name to be used with Mapbox GL Feature State. This column must be an integer a string cast as an integer.'
     },
     filter: {
       type: 'string',

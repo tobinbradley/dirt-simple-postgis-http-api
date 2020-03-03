@@ -94,6 +94,7 @@ module.exports = function (fastify, opts, next) {
         client.query(
           sql(request.params, request.query),
           function onResult(err, result) {
+            release()
             if (err) {
               reply.send(err)
             } else {

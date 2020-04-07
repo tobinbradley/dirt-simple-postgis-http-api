@@ -22,6 +22,9 @@ const sql = (params, query) => {
             srid
           )
         )
+
+        -- Optional Filter
+        ${query.filter ? ` AND ${query.filter}` : ''}
     )
     SELECT ST_AsMVT(mvtgeom.*, '${params.table}', 4096, 'geom' ${
     query.id_column ? `, '${query.id_column}'` : ''

@@ -64,6 +64,10 @@ Your Postgres login will need select rights to any tables or views it should be 
 
 Dirt uses connection pooling, minimizing database connections.
 
+### SQL Functions
+
+If a query parameter looks like it should be able to handle SQL functions, it probably can. For example, the `columns` parameter for most queries can use the `count(*)` function. You can use any function in the database, including user defined functions.
+
 ### Mapbox vector tiles
 
 The `mvt` route serves Mapbox Vector Tiles. The layer name in the returned protobuf will be the same as the table name passed as input. Here's an example of using both `geojson` and `mvt` routes with Mapbox GL JS.
@@ -102,9 +106,9 @@ map.on('load', function() {
 })
 ```
 
-### Tips
+### More Tips
 
 - The master branch of Dirt is now optimized for PostGIS 3. Some functions will work on earlier versions, but some (geobuf, geojson, mvt in particular) will not. Use the `postgis2x` branch if you need to support PostGIS 2.
 - If you modify code or add a route, dirt will not see it until dirt is restarted.
 - The Dirt login needs read rights to the `geometry_columns` view for the `list_layers` service to work.
-- If you pass path parameters that have encoded slashes through Apache (i.e. `%2F`), Apache by default will reject those requests with a 404 (Docs: [AllowEncodedSlashes](https://httpd.apache.org/docs/2.4/mod/core.html#allowencodedslashes)). To fix that, add `AllowEncodedSlashes NoDecode` to the end of your httpd.conf.
+- If you pass path parameters that have encoded slashes through an Apache proxy (i.e. `%2F`), Apache by default will reject those requests with a 404 (Docs: [AllowEncodedSlashes](https://httpd.apache.org/docs/2.4/mod/core.html#allowencodedslashes)). To fix that, add `AllowEncodedSlashes NoDecode` to the end of your httpd.conf.

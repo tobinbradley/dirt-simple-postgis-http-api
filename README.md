@@ -104,6 +104,7 @@ map.on('load', function() {
 
 ### Tips
 
-- Dirt is now optimized for PostGIS 3+. Some functions will work on earlier versions, but some (list_layers, geobuf, geojson, mvt in particular) will not.
+- The master branch of Dirt is now optimized for PostGIS 3. Some functions will work on earlier versions, but some (geobuf, geojson, mvt in particular) will not. Use the `postgis2x` branch if you need to support PostGIS 2.
 - If you modify code or add a route, dirt will not see it until dirt is restarted.
+- The Dirt login needs read rights to the `geometry_columns` view for the `list_layers` service to work.
 - If you pass path parameters that have encoded slashes through Apache (i.e. `%2F`), Apache by default will reject those requests with a 404 (Docs: [AllowEncodedSlashes](https://httpd.apache.org/docs/2.4/mod/core.html#allowencodedslashes)). To fix that, add `AllowEncodedSlashes NoDecode` to the end of your httpd.conf.

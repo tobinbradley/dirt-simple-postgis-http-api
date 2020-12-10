@@ -16,7 +16,7 @@ const sql = (params, query) => {
   } LIMIT 1) a
       WHERE
         ST_Intersects(
-          geom,
+          ${query.geom_column},
           ST_Transform(
             ST_TileEnvelope(${params.z}, ${params.x}, ${params.y}),
             srid

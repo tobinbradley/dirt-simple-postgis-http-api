@@ -1,10 +1,10 @@
 // route query
 const sql = (params, query) => {
   return `
-  SELECT 
+  SELECT
     ${query.columns}
 
-  FROM 
+  FROM
   ${params.table}
 
   -- Optional Filter
@@ -49,7 +49,8 @@ const schema = {
     },
     limit: {
       type: 'integer',
-      description: 'Optional limit to the number of output features.'
+      description: 'Optional limit to the number of output features.',
+      default: 100
     },
     group: {
       type: 'string',

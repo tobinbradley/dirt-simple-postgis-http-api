@@ -1,22 +1,35 @@
 // route query
 const sql = () => {
   return `
-    SELECT * from geometry_columns;
+  SELECT
+    i.table_name,
+    i.table_type,
+    g.f_geometry_column as geometry_column,
+    g.coord_dimension,
+    g.srid,
+    g.type
+  FROM
+    information_schema.tables i
+  LEFT JOIN geometry_columns g
+  ON i.table_name = g.f_table_name
+  WHERE
+    i.table_schema not in  ('pg_catalog', 'information_schema')
+  ORDER BY table_name
   `
 }
 
 // route schema
 const schema = {
-  description: 'Return information in the geometry_columns view. Note the service login needs read permission on the geometry_columns view.',
+  description: 'List tables and views. Note the service user needs read permission on the geometry_columns view.',
   tags: ['meta'],
-  summary: 'list PostGIS layers'
+  summary: 'list tables'
 }
 
 // create route
 module.exports = function (fastify, opts, next) {
   fastify.route({
     method: 'GET',
-    url: '/list_layers',
+    url: '/list_tables',
     schema: schema,
     handler: function (request, reply) {
       fastify.pg.connect(onConnect)

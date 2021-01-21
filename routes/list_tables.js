@@ -1,5 +1,5 @@
 // route query
-const sql = () => {
+const sql = (params, query) => {
   return `
   SELECT
     i.table_name,
@@ -14,6 +14,10 @@ const sql = () => {
   ON i.table_name = g.f_table_name
   WHERE
     i.table_schema not in  ('pg_catalog', 'information_schema')
+
+    -- Optional where filter
+    ${query.filter ? `and ${query.filter}` : '' }
+
   ORDER BY table_name
   `
 }
@@ -22,7 +26,13 @@ const sql = () => {
 const schema = {
   description: 'List tables and views. Note the service user needs read permission on the geometry_columns view.',
   tags: ['meta'],
-  summary: 'list tables'
+  summary: 'list tables',
+  querystring: {
+    filter: {
+      type: 'string',
+      description: 'Optional filter parameters for a SQL WHERE statement.'
+    }
+  }
 }
 
 // create route
@@ -42,7 +52,7 @@ module.exports = function (fastify, opts, next) {
         })
 
         client.query(
-          sql(),
+          sql(request.params, request.query),
           function onResult(err, result) {
             release()
             reply.send(err || result.rows)

@@ -106,6 +106,22 @@ map.on('load', function() {
 })
 ```
 
+### Rate Limiting
+
+You can add rate limiting users by using the [fastify-rate-limit](https://github.com/fastify/fastify-rate-limit) plugin. This can be handy not only for regular connections but also to keep a wayward bot from eating your lunch.
+
+```bash
+npm install --save fastify-rate-limit
+```
+
+```javascript index.js
+fastify.register(require('fastify-rate-limit'), {
+  max: 100,
+  timeWindow: '1 minute'
+})
+
+```
+
 ### More Tips
 
 - The master branch of Dirt is now optimized for PostGIS 3. Some functions will work on earlier versions, but some (geobuf, geojson, mvt in particular) will not. Use the `postgis2x` branch if you need to support PostGIS 2.

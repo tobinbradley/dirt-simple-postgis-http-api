@@ -119,7 +119,6 @@ fastify.register(require('fastify-rate-limit'), {
   max: 100,
   timeWindow: '1 minute'
 })
-
 ```
 
 ### More Tips

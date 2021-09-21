@@ -98,13 +98,8 @@ module.exports = function (fastify, opts, next) {
             if (err) {
               reply.send(err)
             } else {
-              if (result.rows.length < 1) {
-                reply.code(404).send({
-                  statusCode: 404,
-                  error: 'No records found',
-                  code: '404',
-                  message: 'No records found matching your query',
-                });
+                if (result.rows.length === 0) {
+                reply.code(404);
               } else {
                 const json = {
                   type: 'FeatureCollection',

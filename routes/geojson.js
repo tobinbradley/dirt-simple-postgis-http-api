@@ -98,14 +98,15 @@ module.exports = function (fastify, opts, next) {
             if (err) {
               reply.send(err)
             } else {
-              if (!result.rows[0].geojson) {
-                reply.code(204)
+                if (result.rows.length === 0) {
+                reply.code(404);
+              } else {
+                const json = {
+                  type: 'FeatureCollection',
+                  features: result.rows.map((el) => JSON.parse(el.geojson)),
+                };
+                reply.send(json);
               }
-              const json = {
-                type: 'FeatureCollection',
-                features: result.rows.map(el => JSON.parse(el.geojson))
-              }
-              reply.send(json)
             }
           }
         )

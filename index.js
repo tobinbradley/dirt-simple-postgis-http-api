@@ -9,9 +9,8 @@ fastify.register(require('fastify-postgres'), {
 
 // compression - add x-protobuf
 fastify.register(
-  require('fastify-compress'), {
-    customTypes: /^text\/|\+json$|\+text$|\+xml|x-protobuf$/
-  }
+  require('fastify-compress'),
+  { customTypes: /x-protobuf$/ }
 )
 
 // cache

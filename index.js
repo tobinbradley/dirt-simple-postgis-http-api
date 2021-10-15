@@ -4,7 +4,7 @@ const fastify = require('fastify')()
 
 // postgres connection
 fastify.register(require('fastify-postgres'), {
-  connectionString: config.db
+  connectionString: process.env.POSTGRES_CONNECTION || config.db
 })
 
 // compression - add x-protobuf

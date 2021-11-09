@@ -2,6 +2,7 @@
   "db": "postgres://user:password@server/database",
   "cache": 3600,
   "port": 3000,
+  "logger": false,
   "swagger": {
     "basePath": null,
     "externalDocs": {

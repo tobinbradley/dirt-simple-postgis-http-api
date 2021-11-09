@@ -85,11 +85,7 @@ module.exports = function (fastify, opts, next) {
       fastify.pg.connect(onConnect)
 
       function onConnect(err, client, release) {
-        if (err) return reply.send({
-          "statusCode": 500,
-          "error": "Internal Server Error",
-          "message": "unable to connect to database server"
-        })
+        if (err) return reply.send(err)
 
         client.query(
           sql(request.params, request.query),
@@ -99,13 +95,13 @@ module.exports = function (fastify, opts, next) {
               reply.send(err)
             } else {
                 if (result.rows.length === 0) {
-                reply.code(404);
+                reply.code(204)
               } else {
                 const json = {
                   type: 'FeatureCollection',
-                  features: result.rows.map((el) => JSON.parse(el.geojson)),
-                };
-                reply.send(json);
+                  features: result.rows.map((el) => JSON.parse(el.geojson))
+                }
+                reply.send(json)
               }
             }
           }

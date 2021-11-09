@@ -1,13 +1,13 @@
 // route query
 const sql = (params, query) => {
   return `
-  SELECT 
+  SELECT
     ${query.columns}
-  
+
   FROM
     ${params.table_from},
     ${params.table_to}
-  
+
   WHERE
     ST_DWithin(
       ${params.table_from}.${query.geom_column_from},
@@ -86,11 +86,7 @@ module.exports = function (fastify, opts, next) {
       fastify.pg.connect(onConnect)
 
       function onConnect(err, client, release) {
-        if (err) return reply.send({
-          "statusCode": 500,
-          "error": "Internal Server Error",
-          "message": "unable to connect to database server"
-        })
+        if (err) return reply.send(err)
 
         client.query(
           sql(request.params, request.query),

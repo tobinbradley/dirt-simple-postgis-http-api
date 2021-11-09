@@ -3,18 +3,18 @@ const sql = (params, query) => {
   const [x, y, srid] = params.point.match(/^((-?\d+\.?\d+)(,-?\d+\.?\d+)(,[0-9]{4}))/)[0].split(',')
 
   return `
-  SELECT 
+  SELECT
     ${query.columns}
-  
+
   FROM
     ${params.table}
-  
+
   WHERE
     ST_DWithin(
-      ${query.geom_column},      
+      ${query.geom_column},
       ST_Transform(
         st_setsrid(
-          st_makepoint(${x}, ${y}), 
+          st_makepoint(${x}, ${y}),
           ${srid}
         ),
         (SELECT ST_SRID(${query.geom_column}) FROM ${params.table} LIMIT 1)
@@ -89,11 +89,7 @@ module.exports = function (fastify, opts, next) {
       fastify.pg.connect(onConnect)
 
       function onConnect(err, client, release) {
-        if (err) return reply.send({
-          "statusCode": 500,
-          "error": "Internal Server Error",
-          "message": "unable to connect to database server"
-        })
+        if (err) return reply.send(err)
 
         client.query(
           sql(request.params, request.query),

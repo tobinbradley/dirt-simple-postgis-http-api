@@ -3,7 +3,7 @@ const sql = (params, query) => {
   const [x, y, srid] = params.point.match(/^((-?\d+\.?\d+)(,-?\d+\.?\d+)(,[0-9]{4}))/)[0].split(',')
 
   return `
-  SELECT 
+  SELECT
     ${query.columns},
     ST_Distance(
       ST_Transform(
@@ -13,13 +13,13 @@ const sql = (params, query) => {
       ${query.geom_column}
     ) as distance
 
-  FROM 
+  FROM
   ${params.table}
 
   -- Optional Filter
   ${query.filter ? `WHERE ${query.filter}` : '' }
 
-  ORDER BY 
+  ORDER BY
     ${query.geom_column} <-> ST_Transform(
       st_setsrid(st_makepoint(${x}, ${y}), ${srid}),
       (SELECT ST_SRID(${query.geom_column}) FROM ${params.table} LIMIT 1)
@@ -78,11 +78,7 @@ module.exports = function (fastify, opts, next) {
       fastify.pg.connect(onConnect)
 
       function onConnect(err, client, release) {
-        if (err) return reply.send({
-          "statusCode": 500,
-          "error": "Internal Server Error",
-          "message": "unable to connect to database server"
-        })
+        if (err) return reply.send(err)
 
         client.query(
           sql(request.params, request.query),

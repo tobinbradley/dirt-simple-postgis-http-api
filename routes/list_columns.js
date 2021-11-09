@@ -1,11 +1,11 @@
 // route query
 const sql = (params) => {
   return `
-  SELECT 
+  SELECT
     attname as field_name,
     typname as field_type
 
-  FROM 
+  FROM
     pg_namespace, pg_attribute, pg_type, pg_class
 
   WHERE
@@ -40,11 +40,7 @@ module.exports = function (fastify, opts, next) {
       fastify.pg.connect(onConnect)
 
       function onConnect(err, client, release) {
-        if (err) return reply.send({
-          "statusCode": 500,
-          "error": "Internal Server Error",
-          "message": "unable to connect to database server"
-        })
+        if (err) return reply.send(err)
 
         client.query(
           sql(request.params),

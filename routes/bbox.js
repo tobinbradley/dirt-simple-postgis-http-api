@@ -1,10 +1,10 @@
 // route query
 const sql = (params, query) => {
   return `
-  SELECT 
+  SELECT
     ST_Extent(ST_Transform(${query.geom_column}, ${query.srid})) as bbox
 
-  FROM 
+  FROM
     ${params.table}
 
   -- Optional where filter
@@ -51,17 +51,13 @@ module.exports = function (fastify, opts, next) {
       fastify.pg.connect(onConnect)
 
       function onConnect(err, client, release) {
-        if (err) return reply.send({
-          "statusCode": 500,
-          "error": "Internal Server Error",
-          "message": "unable to connect to database server"
-        })
+        if (err) return reply.send(err)
 
         client.query(
           sql(request.params, request.query),
           function onResult(err, result) {
             release()
-            reply.send(err || result.rows)
+            reply(err || result.rows)
           }
         )
       }

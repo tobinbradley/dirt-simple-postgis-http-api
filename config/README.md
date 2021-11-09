@@ -6,6 +6,7 @@
   "cache": 3600,
   "port": 3000,
   "host": "localhost",
+  "logger": false,
   "swagger": {
     "basePath": null,
     "externalDocs": {
@@ -51,8 +52,11 @@
 ### host
 
 The server will bind to the `host` name or IP address that is supplied.
-To listen on all available IPv4 interfaces it should be "0.0.0.0" or "::" to accept connections on all IPv6 addresses.
-Default value is "localhost".
+To listen on all available IPv4 interfaces it should be "0.0.0.0" or "::" to accept connections on all IPv6 addresses. Default value is "localhost".
+
+### logger
+
+Turn on [Fastify's logger](https://www.fastify.io/docs/latest/Logging/) to show log information in the console. The default is `false`. This will have negative performance implications, so don't leave it on in production.
 
 ### swagger
 

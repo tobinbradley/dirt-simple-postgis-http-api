@@ -1,6 +1,6 @@
 const path = require('path')
 const config = require('./config')
-const fastify = require('fastify')()
+const fastify = require('fastify')({ logger: config.logger})
 
 // postgres connection
 fastify.register(require('fastify-postgres'), {

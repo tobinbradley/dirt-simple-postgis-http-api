@@ -51,7 +51,7 @@ module.exports = function (fastify, opts, next) {
       fastify.pg.connect(onConnect)
 
       function onConnect(err, client, release) {
-        if (err) return reply.send(err)
+        if (err) return reply.code(500).send({ "error": "Database Error"})
 
         client.query(
           sql(request.params, request.query),

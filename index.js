@@ -16,8 +16,9 @@ fastify.register(
 // cache
 fastify.register(
   require('fastify-caching'), {
-    privacy: 'private',
-    expiresIn: config.cache
+    privacy: config.cachePrivacy || 'private',
+    expiresIn: config.cache,
+    serverExpiresIn: config.serverCache
   }
 )
 

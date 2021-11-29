@@ -9,13 +9,12 @@
   "author": "Tobin Bradley",
   "license": "MIT",
   "dependencies": {
-    "fastify": "^3.23.1",
+    "fastify": "^3.24.0",
     "fastify-autoload": "^3.9.0",
     "fastify-caching": "^6.2.0",
     "fastify-compress": "^3.6.1",
     "fastify-cors": "^6.0.2",
     "fastify-postgres": "^3.6.0",
-    "fastify-static": "^4.5.0",
     "fastify-swagger": "^4.12.6",
     "pg": "^8.7.1"
   }

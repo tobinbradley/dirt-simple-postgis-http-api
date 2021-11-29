@@ -28,12 +28,8 @@ fastify.register(require('fastify-cors'))
 // swagger
 fastify.register(require('fastify-swagger'), {
   exposeRoute: true,
+  routePrefix: '/',
   swagger: config.swagger
-})
-
-// static documentation path
-fastify.register(require('fastify-static'), {
-  root: path.join(__dirname, 'documentation')
 })
 
 // routes

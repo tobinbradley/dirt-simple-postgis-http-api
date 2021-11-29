@@ -8,7 +8,6 @@
   "host": "localhost",
   "logger": false,
   "swagger": {
-    "basePath": null,
     "externalDocs": {
       "url": "https://github.com/tobinbradley/dirt-simple-postgis-http-api",
       "description": "Source code on Github"

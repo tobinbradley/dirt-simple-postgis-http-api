@@ -4,7 +4,6 @@
   "port": 3000,
   "logger": false,
   "swagger": {
-    "basePath": null,
     "externalDocs": {
       "url": "https://github.com/tobinbradley/dirt-simple-postgis-http-api",
       "description": "Source code on Github"
@@ -18,15 +17,19 @@
       "http",
       "https"
     ],
-    "tags": [{
-      "name": "api",
-      "description": "code related end-points"
-    }, {
-      "name": "feature",
-      "description": "features in common formats for direct mapping."
-    }, {
-      "name": "meta",
-      "description": "meta information for tables and views."
-    }]
+    "tags": [
+      {
+        "name": "api",
+        "description": "code related end-points"
+      },
+      {
+        "name": "feature",
+        "description": "features in common formats for direct mapping."
+      },
+      {
+        "name": "meta",
+        "description": "meta information for tables and views."
+      }
+    ]
   }
 }

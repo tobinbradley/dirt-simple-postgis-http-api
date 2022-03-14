@@ -12,11 +12,11 @@ Each route contains three sections: sql, schema, and the Fastify route itself.
 // route query
 const sql = (params, query) => {
   return `
-  SELECT 
+  SELECT
     attname as field_name,
     typname as field_type
 
-  FROM 
+  FROM
     pg_namespace, pg_attribute, pg_type, pg_class
 
   WHERE
@@ -143,7 +143,7 @@ if (err) {
 } else {
   const mvt = result.rows[0].st_asmvt
   if (mvt.length === 0) {
-    reply.code(204)
+    reply.code(204).send()
   }
   reply.header('Content-Type', 'application/x-protobuf').send(mvt)
 }

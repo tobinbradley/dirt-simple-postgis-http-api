@@ -101,7 +101,7 @@ module.exports = function(fastify, opts, next) {
           } else {
             const mvt = result.rows[0].mvt
             if (mvt.length === 0) {
-              reply.code(204)
+              reply.code(204).send()
             }
             reply.header('Content-Type', 'application/x-protobuf').send(mvt)
           }

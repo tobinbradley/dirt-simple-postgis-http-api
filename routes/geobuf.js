@@ -108,7 +108,7 @@ module.exports = function(fastify, opts, next) {
             reply.send(err)
           } else {
             if (!result.rows[0].st_asgeobuf) {
-              reply.code(204)
+              reply.code(204).send()
             }
             reply
               .header('Content-Type', 'application/x-protobuf')

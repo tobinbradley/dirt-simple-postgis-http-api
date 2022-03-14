@@ -95,7 +95,7 @@ module.exports = function (fastify, opts, next) {
               reply.send(err)
             } else {
                 if (result.rows.length === 0) {
-                reply.code(204)
+                reply.code(204).send()
               } else {
                 const json = {
                   type: 'FeatureCollection',

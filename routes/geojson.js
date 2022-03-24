@@ -4,11 +4,20 @@ const sql = (params, query) => {
 
   return `
     SELECT
-      ST_AsGeoJSON(subq.*, '', ${parseInt(query.precision, 10)}) AS geojson
+      jsonb_build_object(
+        'type',       'Feature',
+        ${
+          query.id_column ? `'id', ${query.id_column},` : ''
+        }
+        'geometry',   ST_AsGeoJSON(geom, ${parseInt(query.precision, 10)})::jsonb,
+        'properties', to_jsonb( subq.* ) - 'geom' ${ query.id_column ? `- '${query.id_column}'` : '' }
+      ) AS geojson
+
     FROM (
       SELECT
         ST_Transform(${query.geom_column}, 4326) as geom
         ${query.columns ? `, ${query.columns}` : ''}
+        ${ query.id_column ? `, ${query.id_column}` : '' }
       FROM
         ${params.table},
         (SELECT ST_SRID(${query.geom_column}) AS srid FROM ${params.table} LIMIT 1) a
@@ -58,6 +67,11 @@ const schema = {
       type: 'string',
       description: 'Columns to return as GeoJSON properites. The default is no columns. <br/><em>Note: the geometry column should not be listed here, and columns must be explicitly named.</em>'
     },
+    id_column: {
+      type: 'string',
+      description:
+        'Optional id column name to be used with Mapbox GL Feature State. This column must be an integer a string cast as an integer.'
+    },
     filter: {
       type: 'string',
       description: 'Optional filter parameters for a SQL WHERE statement.'
@@ -99,7 +113,7 @@ module.exports = function (fastify, opts, next) {
               } else {
                 const json = {
                   type: 'FeatureCollection',
-                  features: result.rows.map((el) => JSON.parse(el.geojson))
+                  features: result.rows.map((el) => el.geojson)
                 }
                 reply.send(json)
               }

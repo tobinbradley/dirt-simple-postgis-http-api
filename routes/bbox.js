@@ -57,7 +57,7 @@ module.exports = function (fastify, opts, next) {
           sql(request.params, request.query),
           function onResult(err, result) {
             release()
-            reply(err || result.rows)
+            reply.send(err || result.rows)
           }
         )
       }

@@ -60,6 +60,20 @@ npm start
 
 To view interactive documentation, head to [http://127.0.0.1:3000/](http://127.0.0.1:3000/).
 
+### Running via Docker
+
+To build a Docker image:
+
+```
+docker build -t dirt .
+```
+
+To run the Docker image:
+
+```
+docker run -dp 3000:3000 -e POSTGRES_CONNECTION=<connection string> dirt
+```
+
 ## Architecture
 
 ### Due credit

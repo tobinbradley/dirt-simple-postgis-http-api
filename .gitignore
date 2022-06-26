@@ -3,3 +3,4 @@ config/index.json
 node_modules
 TODO.md
 .vscode
+.env

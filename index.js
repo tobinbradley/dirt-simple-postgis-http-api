@@ -1,44 +1,74 @@
 const path = require('path')
-const config = require('./config')
-const fastify = require('fastify')({ logger: config.logger})
+const fastify = require('fastify')({ logger: process.env.SERVER_LOGGER || false})
+require('dotenv').config()
 
-// postgres connection
-fastify.register(require('fastify-postgres'), {
-  connectionString: process.env.POSTGRES_CONNECTION || config.db
+// EXIT IF POSTGRES_CONNECTION ENV VARIABLE NOT SET
+if (!("POSTGRES_CONNECTION" in process.env)) {
+  throw new Error("Required ENV variable POSTGRES_CONNECTION is not set. Please see README.md for more information.");
+}
+
+// POSTGRES CONNECTION
+fastify.register(require('@fastify/postgres'), {
+  connectionString: process.env.POSTGRES_CONNECTION
 })
 
-// compression - add x-protobuf
+// COMPRESSION
+// add x-protobuf
 fastify.register(
-  require('fastify-compress'),
+  require('@fastify/compress'),
   { customTypes: /x-protobuf$/ }
 )
 
-// cache
+// CACHE SETTINGS
 fastify.register(
-  require('fastify-caching'), {
-    privacy: config.cachePrivacy || 'private',
-    expiresIn: config.cache,
-    serverExpiresIn: config.serverCache
+  require('@fastify/caching'), {
+    privacy: process.env.CACHE_PRIVACY || 'private',
+    expiresIn: process.env.CACHE_EXPIRESIN || 3600,
+    serverExpiresIn: process.env.CACHE_SERVERCACHE
   }
 )
 
 // CORS
-fastify.register(require('fastify-cors'))
+fastify.register(require('@fastify/cors'))
 
-// swagger
-fastify.register(require('fastify-swagger'), {
+// INITIALIZE SWAGGER
+fastify.register(require('@fastify/swagger'), {
   exposeRoute: true,
   routePrefix: '/',
-  swagger: config.swagger
+  swagger: {
+    "info": {
+      "title": "Dirst Simple Postgres HTTP API",
+      "description": "The Dirt-Simple PostGIS HTTP API is an easy way to expose geospatial functionality to your applications. It takes simple requests over HTTP and returns JSON, JSONP, or protobuf (Mapbox Vector Tile) to the requester. Although the focus of the project has generally been on exposing PostGIS functionality to web apps, you can use the framework to make an API to any database.",
+      "version": process.env.npm_package_version || ""
+    },
+    "externalDocs": {
+      "url": "https://github.com/tobinbradley/dirt-simple-postgis-http-api",
+      "description": "Source code on Github"
+    },
+    "schemes": [
+      "http",
+      "https"
+    ],
+    "tags": [{
+      "name": "api",
+      "description": "code related end-points"
+    }, {
+      "name": "feature",
+      "description": "features in common formats for direct mapping."
+    }, {
+      "name": "meta",
+      "description": "meta information for tables and views."
+    }]
+  }
 })
 
-// routes
-fastify.register(require('fastify-autoload'), {
+// ADD ROUTES
+fastify.register(require('@fastify/autoload'), {
   dir: path.join(__dirname, 'routes')
 })
 
-// Launch server
-fastify.listen(config.port, config.host || 'localhost', function (err, address) {
+// LAUNCH SERVER
+fastify.listen({port: process.env.SERVER_PORT || 3000, host: process.env.SERVER_HOST || '0.0.0.0'}, (err, address) => {
   if (err) {
     console.log(err)
     process.exit(1)

@@ -26,7 +26,30 @@ npm install
 
 ### Step 2: add your configuration
 
-Add your Postgres connection information to `config/index.json.txt` and rename it `index.json`. Information on the config options can be found [here](config/README.md).
+Dirt is configured via environmental variables. These variables can be placed in a `.env` file in the project's root folder, via the command line at run time, or however you set environmental variables on your operating system. The only environmental variable that must be set is `POSTGRES_CONNECTION`, which contains your postgres login information.
+
+#### `.env` file
+```env
+POSTGRES_CONNECTION="postgres://user:password@server/database"
+```
+
+#### command line, linux and mac
+```
+POSTGRES_CONNECTION="postgres://user:password@server/database" npm start
+```
+
+This is the complete complete list of environmental variables that can be set.
+
+| Variable | Required | Default | Description |
+| ----------- | ----------- | ----------- | ----------- |
+| POSTGRES_CONNECTION | Yes | N/A | Postgres connection string |
+| SERVER_LOGGER | No | false | Turn on Fastify's [error logger](https://www.fastify.io/docs/latest/Reference/Logging/) |
+| SERVER_HOST | No | 0.0.0.0 | IP to [listen](https://www.fastify.io/docs/latest/Reference/Server/#listen) on, default is all |
+| SERVER_PORT | No | 3000 | Port to [listen](https://www.fastify.io/docs/latest/Reference/Server/#listen) on |
+| CACHE_PRIVACY | No | private | [Cache response directive](https://github.com/fastify/fastify-caching) |
+| CACHE_EXPIRESIN | No | 3600 | [Max age in seconds](https://github.com/fastify/fastify-caching) |
+| CACHE_SERVERCACHE | No | undefined | Max age in seconds for [shared cache](https://github.com/fastify/fastify-caching) (i.e. CDN) |
+
 
 ### Step 3: fire it up!
 
@@ -56,11 +79,13 @@ Fastify is written by some of the core Node developers, and it's awesome. A numb
 
 All routes are stored in the `routes` folder and are automatically loaded on start. Check out the [routes readme](routes/README.md) for more information.
 
-## Tips and tricks
+## Tips and Tricks
 
 ### Database
 
-Your Postgres login will need select rights to any tables or views it should be able to access. For security, it should _only_ have select rights unless you plan to specifically add a route that writes to a table.
+Your Postgres login will need select rights to any tables or views it should be able to access. That includes the `geometry_columns` view for the `list_layers` end point to work.
+
+For security, it should _only_ have select rights unless you plan to specifically add a route that writes to a table.
 
 Dirt uses connection pooling, minimizing database connections.
 
@@ -70,7 +95,7 @@ If a query parameter looks like it should be able to handle SQL functions, it pr
 
 ### Mapbox vector tiles
 
-The `mvt` route serves Mapbox Vector Tiles. The layer name in the returned protobuf will be the same as the table name passed as input. Here's an example of using both `geojson` and `mvt` routes with Mapbox GL JS.
+The `mvt` route serves Mapbox Vector Tiles. The layer name in the returned protobuf will be the same as the table name passed as input. Here's an example of using both `geojson` and `mvt` routes with MapLibre GL JS.
 
 ```javascript
 map.on('load', function() {
@@ -108,23 +133,18 @@ map.on('load', function() {
 
 ### Rate Limiting
 
-You can add rate limiting users by using the [fastify-rate-limit](https://github.com/fastify/fastify-rate-limit) plugin. This can be handy not only for regular connections but also to keep a wayward bot from eating your lunch.
+You can add rate limiting users by using the [@fastify/rate-limit](https://github.com/fastify/fastify-rate-limit) plugin. This can be handy not only for regular connections but also to keep a wayward bot from eating your lunch.
 
 ```bash
-npm install --save fastify-rate-limit
+npm install --save @fastify/rate-limit
 ```
 
 ```javascript index.js
-fastify.register(require('fastify-rate-limit'), {
-  max: 100,
+fastify.register(require('@fastify/rate-limit'), {
+  max: 250,
   timeWindow: '1 minute'
 })
 ```
+### Changes require a Restart
 
-### More Tips
-
-- The master branch of Dirt is now optimized for PostGIS 3. Some functions will work on earlier versions, but some (geobuf, geojson, mvt in particular) will not. Use the `postgis2x` branch if you need to support PostGIS 2.
-- If you modify code or add a route, dirt will not see it until dirt is restarted.
-- The Dirt login needs read rights to the `geometry_columns` view for the `list_layers` service to work.
-- You can override the db connection string with the environmental variable `POSTGRES_CONNECTION`.
-- If you pass path parameters that have encoded slashes through an Apache proxy (i.e. `%2F`), Apache by default will reject those requests with a 404 (Docs: [AllowEncodedSlashes](https://httpd.apache.org/docs/2.4/mod/core.html#allowencodedslashes)). To fix that, add `AllowEncodedSlashes NoDecode` to the end of your httpd.conf.
+If you modify code or add a route, dirt will not see it until dirt is restarted.

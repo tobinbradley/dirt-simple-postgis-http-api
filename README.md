@@ -49,6 +49,7 @@ This is the complete complete list of environmental variables that can be set.
 | CACHE_PRIVACY | No | private | [Cache response directive](https://github.com/fastify/fastify-caching) |
 | CACHE_EXPIRESIN | No | 3600 | [Max age in seconds](https://github.com/fastify/fastify-caching) |
 | CACHE_SERVERCACHE | No | undefined | Max age in seconds for [shared cache](https://github.com/fastify/fastify-caching) (i.e. CDN) |
+| RATE_MAX | No | undefined | Requests per minute rate limiter (limiter not used if RATE_LIMIT not set)  |
 
 
 ### Step 3: fire it up!

@@ -31,6 +31,14 @@ fastify.register(
 // CORS
 fastify.register(require('@fastify/cors'))
 
+// OPTIONAL RATE LIMITER
+if ("RATE_MAX" in process.env) {
+  fastify.register(import('@fastify/rate-limit'), {
+    max: process.env.RATE_MAX,
+    timeWindow: '1 minute'
+  })
+}
+
 // INITIALIZE SWAGGER
 fastify.register(require('@fastify/swagger'), {
   exposeRoute: true,

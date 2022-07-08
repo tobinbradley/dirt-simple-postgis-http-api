@@ -43,7 +43,8 @@ This is the complete complete list of environmental variables that can be set.
 | Variable | Required | Default | Description |
 | ----------- | ----------- | ----------- | ----------- |
 | POSTGRES_CONNECTION | Yes | N/A | Postgres connection string |
-| SERVER_LOGGER | No | false | Turn on Fastify's [error logger](https://www.fastify.io/docs/latest/Reference/Logging/) |
+| SERVER_LOGGER | No | undefined | Turn on Fastify's [error logger](https://www.fastify.io/docs/latest/Reference/Logging/). Options are `true` (same as `info`), `fatal`, `error`, `warn`, `info`, `debug`, `trace` or `silent`.  |
+| SERVER_LOGGER_PATH | No | undefined | Log to file instead of console, ex: `/path/to/file`  |
 | SERVER_HOST | No | 0.0.0.0 | IP to [listen](https://www.fastify.io/docs/latest/Reference/Server/#listen) on, default is all |
 | SERVER_PORT | No | 3000 | Port to [listen](https://www.fastify.io/docs/latest/Reference/Server/#listen) on |
 | CACHE_PRIVACY | No | private | [Cache response directive](https://github.com/fastify/fastify-caching) |

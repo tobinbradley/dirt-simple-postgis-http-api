@@ -1,6 +1,6 @@
 const path = require('path')
-const fastify = require('fastify')({ logger: process.env.SERVER_LOGGER || false})
-require('dotenv').config()
+require("dotenv").config()
+const fastify = require("fastify")({ logger: process.env.SERVER_LOGGER || false })
 
 // EXIT IF POSTGRES_CONNECTION ENV VARIABLE NOT SET
 if (!("POSTGRES_CONNECTION" in process.env)) {

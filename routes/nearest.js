@@ -79,7 +79,7 @@ module.exports = function (fastify, opts, next) {
 
       function onConnect(err, client, release) {
         if (err) {
-          fastify.log.error(err)
+          request.log.error(err)
           return reply.code(500).send({ error: "Database connection error." })
         }
 

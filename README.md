@@ -147,20 +147,6 @@ map.on('load', function() {
 })
 ```
 
-### Rate Limiting
-
-You can add rate limiting users by using the [@fastify/rate-limit](https://github.com/fastify/fastify-rate-limit) plugin. This can be handy not only for regular connections but also to keep a wayward bot from eating your lunch.
-
-```bash
-npm install --save @fastify/rate-limit
-```
-
-```javascript index.js
-fastify.register(require('@fastify/rate-limit'), {
-  max: 250,
-  timeWindow: '1 minute'
-})
-```
 ### Changes require a Restart
 
 If you modify code or add a route, dirt will not see it until dirt is restarted.

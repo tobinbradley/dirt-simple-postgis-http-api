@@ -20,7 +20,7 @@ const sql = (params, query) => {
         ${ query.id_column ? `, ${query.id_column}` : '' }
       FROM
         ${params.table},
-        (SELECT ST_SRID(${query.geom_column}) AS srid FROM ${params.table} LIMIT 1) a
+        (SELECT ST_SRID(${query.geom_column}) AS srid FROM ${params.table} WHERE ${query.geom_column} IS NOT NULL LIMIT 1) a
       ${query.filter || bounds ? 'WHERE' : ''}
         ${query.filter ? `${query.filter}` : ''}
         ${query.filter && bounds ? 'AND' : ''}

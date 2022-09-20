@@ -17,9 +17,7 @@ const sql = (params, query) => {
       ${params.table}
       ${
         bounds
-          ? `, (SELECT ST_SRID(${query.geom_column}) as srid FROM ${
-              params.table
-            } LIMIT 1) sq`
+          ? `, (SELECT ST_SRID(${query.geom_column}) AS srid FROM ${params.table} WHERE ${query.geom_column} IS NOT NULL LIMIT 1) sq`
           : ''
       }
 

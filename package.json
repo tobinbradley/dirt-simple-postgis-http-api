@@ -1,6 +1,6 @@
 {
   "name": "dirt-simple-postgis-http-api",
-  "version": "4.3.2",
+  "version": "4.3.3",
   "description": "The Dirt-Simple PostGIS HTTP API exposes PostGIS functionality to your applications over HTTP.",
   "main": "index.js",
   "scripts": {

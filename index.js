@@ -55,7 +55,7 @@ fastify.register(require('@fastify/swagger'), {
   routePrefix: '/',
   swagger: {
     "info": {
-      "title": "Dirst Simple Postgres HTTP API",
+      "title": "Dirt-Simple PostGIS HTTP API",
       "description": "The Dirt-Simple PostGIS HTTP API is an easy way to expose geospatial functionality to your applications. It takes simple requests over HTTP and returns JSON, JSONP, or protobuf (Mapbox Vector Tile) to the requester. Although the focus of the project has generally been on exposing PostGIS functionality to web apps, you can use the framework to make an API to any database.",
       "version": process.env.npm_package_version || ""
     },

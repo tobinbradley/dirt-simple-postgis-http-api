@@ -64,8 +64,8 @@ fastify.register(require('@fastify/swagger'), {
       "description": "Source code on Github"
     },
     "schemes": [
-      "http",
-      "https"
+      "https",
+      "http"
     ],
     "tags": [{
       "name": "api",

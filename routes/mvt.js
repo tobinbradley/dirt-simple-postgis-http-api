@@ -1,20 +1,22 @@
 // route query
+require("dotenv").config()
+
 const sql = (params, query) => {
   return `
     WITH mvtgeom as (
       SELECT
         ST_AsMVTGeom (
-          ST_Transform(${query.geom_column}, 3857),
+          ST_Transform(${process.env.TABLE_COLUMN}, 3857),
           ST_TileEnvelope(${params.z}, ${params.x}, ${params.y})
         ) as geom
         ${query.columns ? `, ${query.columns}` : ''}
         ${query.id_column ? `, ${query.id_column}` : ''}
       FROM
-        ${params.table},
-        (SELECT ST_SRID(${query.geom_column}) AS srid FROM ${params.table} WHERE ${query.geom_column} IS NOT NULL LIMIT 1) a
+        ${process.env.TABLE_NAME},
+        (SELECT ST_SRID(${process.env.TABLE_COLUMN}) AS srid FROM ${process.env.TABLE_NAME} WHERE ${process.env.TABLE_COLUMN} IS NOT NULL LIMIT 1) a
       WHERE
         ST_Intersects(
-          ${query.geom_column},
+          ${process.env.TABLE_COLUMN},
           ST_Transform(
             ST_TileEnvelope(${params.z}, ${params.x}, ${params.y}),
             srid
@@ -22,11 +24,10 @@ const sql = (params, query) => {
         )
 
         -- Optional Filter
-        ${query.filter ? ` AND ${query.filter}` : ''}
+        ${`AND xform_id=${query.form_id} and geom is not null`}
     )
-    SELECT ST_AsMVT(mvtgeom.*, '${params.table}', 4096, 'geom' ${
-    query.id_column ? `, '${query.id_column}'` : ''
-  }) AS mvt from mvtgeom;
+    SELECT ST_AsMVT(mvtgeom.*, '${process.env.TABLE_NAME}', 4096, 'geom' ${query.id_column ? `, '${query.id_column}'` : ''
+    }) AS mvt from mvtgeom;
   `
 }
 
@@ -78,12 +79,12 @@ const schema = {
 }
 
 // create route
-module.exports = function(fastify, opts, next) {
+module.exports = function (fastify, opts, next) {
   fastify.route({
     method: 'GET',
-    url: '/mvt/:table/:z/:x/:y',
+    url: '/mvt/:z/:x/:y',
     schema: schema,
-    handler: function(request, reply) {
+    handler: function (request, reply) {
       fastify.pg.connect(onConnect)
 
       function onConnect(err, client, release) {

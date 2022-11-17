@@ -11,7 +11,41 @@ if ("SERVER_LOGGER" in process.env) {
 }
 
 const fastify = require("fastify")({ logger: logger })
+const axios = require("axios");
 
+// middleware 
+// fastify.register(require('@fastify/express'))
+// if ("FORMS_ENDPOINT" in process.env) {
+//   // console.log(fastify)
+  
+// }
+
+fastify.register((req, res, done) => {
+  const tempToken = req && req.url && req.url.split("temp_token=")[1];
+  if (tempToken) {
+    const buildXformStr = queryString.parse(req.url).filter;
+    const getXformId = queryString.parse(buildXformStr.split(" ")[0]).xform_id;
+    axios
+      .get(`${process.env.FORMS_ENDPOINT}${getXformId}.json`, {
+        headers: {
+          Authorization: `TempToken ${tempToken}`,
+        },
+      })
+      .then((res) => {
+        if (res && res.status === 200) {
+          done();
+        } else {
+          done("Forbidden");
+        }
+      })
+      .catch((error) => {
+        // console.log(error)
+        done(error.detail);
+      });
+  } else {
+    done("Authentication Failure");
+  }
+});
 // EXIT IF POSTGRES_CONNECTION ENV VARIABLE NOT SET
 if (!("POSTGRES_CONNECTION" in process.env)) {
   throw new Error("Required ENV variable POSTGRES_CONNECTION is not set. Please see README.md for more information.");
@@ -32,11 +66,10 @@ fastify.register(
 // CACHE SETTINGS
 fastify.register(
   require('@fastify/caching'), {
-    privacy: process.env.CACHE_PRIVACY || 'private',
-    expiresIn: process.env.CACHE_EXPIRESIN || 3600,
-    serverExpiresIn: process.env.CACHE_SERVERCACHE
-  }
-)
+  privacy: process.env.CACHE_PRIVACY || 'private',
+  expiresIn: process.env.CACHE_EXPIRESIN || 3600,
+  serverExpiresIn: process.env.CACHE_SERVERCACHE
+})
 
 // CORS
 fastify.register(require('@fastify/cors'))
@@ -86,7 +119,7 @@ fastify.register(require('@fastify/autoload'), {
 })
 
 // LAUNCH SERVER
-fastify.listen({port: process.env.SERVER_PORT || 3000, host: process.env.SERVER_HOST || '0.0.0.0'}, (err, address) => {
+fastify.listen({ port: process.env.SERVER_PORT || 3000, host: process.env.SERVER_HOST || '0.0.0.0' }, (err, address) => {
   if (err) {
     console.log(err)
     process.exit(1)

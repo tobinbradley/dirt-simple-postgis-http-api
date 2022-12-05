@@ -8,7 +8,7 @@ const sql = (params, query) => {
         ST_AsMVTGeom (
           ST_Transform(${process.env.TABLE_COLUMN}, 3857),
           ST_TileEnvelope(${params.z}, ${params.x}, ${params.y})
-        ) as geom, id
+        ) as geom, id, json
         ${query.columns ? `, ${query.columns}` : ''}
         ${query.id_column ? `, ${query.id_column}` : ''}
       FROM
@@ -102,6 +102,7 @@ module.exports = function (fastify, opts, next) {
             reply.send(err)
           } else {
             const mvt = result.rows[0].mvt
+            console.log(mvt)
             if (mvt.length === 0) {
               reply.code(204).send()
             }

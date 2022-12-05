@@ -8,7 +8,7 @@ const sql = (params, query) => {
         ST_AsMVTGeom (
           ST_Transform(${process.env.TABLE_COLUMN}, 3857),
           ST_TileEnvelope(${params.z}, ${params.x}, ${params.y})
-        ) as geom
+        ) as geom, id
         ${query.columns ? `, ${query.columns}` : ''}
         ${query.id_column ? `, ${query.id_column}` : ''}
       FROM
@@ -24,7 +24,7 @@ const sql = (params, query) => {
         )
 
         -- Optional Filter
-        ${`AND xform_id=${query.form_id} and geom is not null`}
+        ${`AND xform_id=${query.form_id} and geom is not null and deleted_at is null`}
     )
     SELECT ST_AsMVT(mvtgeom.*, '${process.env.TABLE_NAME}', 4096, 'geom' ${query.id_column ? `, '${query.id_column}'` : ''
     }) AS mvt from mvtgeom;

@@ -53,6 +53,7 @@ if ("RATE_MAX" in process.env) {
 fastify.register(require('@fastify/swagger'), {
   exposeRoute: true,
   routePrefix: '/',
+  hideUntagged: true,
   swagger: {
     "info": {
       "title": "Dirt-Simple PostGIS HTTP API",

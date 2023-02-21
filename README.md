@@ -47,6 +47,7 @@ This is the complete complete list of environmental variables that can be set.
 | SERVER_LOGGER_PATH | No | undefined | Log to file instead of console, ex: `/path/to/file`  |
 | SERVER_HOST | No | 0.0.0.0 | IP to [listen](https://www.fastify.io/docs/latest/Reference/Server/#listen) on, default is all |
 | SERVER_PORT | No | 3000 | Port to [listen](https://www.fastify.io/docs/latest/Reference/Server/#listen) on |
+| BASE_PATH | No | / | The [base path](https://swagger.io/specification/v2/) on which the API is served, which is relative to the host |
 | CACHE_PRIVACY | No | private | [Cache response directive](https://github.com/fastify/fastify-caching) |
 | CACHE_EXPIRESIN | No | 3600 | [Max age in seconds](https://github.com/fastify/fastify-caching) |
 | CACHE_SERVERCACHE | No | undefined | Max age in seconds for [shared cache](https://github.com/fastify/fastify-caching) (i.e. CDN) |

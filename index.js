@@ -65,10 +65,6 @@ fastify.register(require('@fastify/swagger'), {
       "url": "https://github.com/tobinbradley/dirt-simple-postgis-http-api",
       "description": "Source code on Github"
     },
-    "schemes": [
-      "https",
-      "http"
-    ],
     "tags": [{
       "name": "api",
       "description": "code related end-points"

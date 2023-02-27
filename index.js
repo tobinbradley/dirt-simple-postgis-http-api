@@ -52,7 +52,6 @@ if ("RATE_MAX" in process.env) {
 // INITIALIZE SWAGGER
 fastify.register(require('@fastify/swagger'), {
   exposeRoute: true,
-  routePrefix: '/',
   hideUntagged: true,
   swagger: {
     "basePath": process.env.BASE_PATH || "/",
@@ -76,6 +75,11 @@ fastify.register(require('@fastify/swagger'), {
       "description": "meta information for tables and views."
     }]
   }
+})
+
+// SWAGGER UI
+fastify.register(require("@fastify/swagger-ui"), {
+  routePrefix: "/"
 })
 
 // ADD ROUTES

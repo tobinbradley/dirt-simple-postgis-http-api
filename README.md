@@ -52,6 +52,7 @@ This is the complete complete list of environmental variables that can be set.
 | CACHE_EXPIRESIN | No | 3600 | [Max age in seconds](https://github.com/fastify/fastify-caching) |
 | CACHE_SERVERCACHE | No | undefined | Max age in seconds for [shared cache](https://github.com/fastify/fastify-caching) (i.e. CDN) |
 | RATE_MAX | No | undefined | Requests per minute [rate limiter](https://github.com/fastify/fastify-rate-limit) (limiter not used if RATE_LIMIT not set)  |
+| SSL_ROOT_CERT_PATH | No | undefined | Path to a CA certificate if using TLS/SSL |
 
 
 ### Step 3: fire it up!
@@ -151,3 +152,15 @@ map.on('load', function() {
 ### Changes require a Restart
 
 If you modify code or add a route, dirt will not see it until dirt is restarted.
+
+### TLS/SSL
+
+If you see an error like
+
+```
+no pg_hba.conf entry for host <host>, user <user>, database <database>, no encryption
+```
+
+you made need to connect to your server over SSL. Obtain a CA certificate and set `SSL_ROOT_CERT_PATH=<path to the certificate>` in `.env`.
+
+If you can't get a certificate or want to bypass the error, you can try setting `NODE_TLS_REJECT_UNAUTHORIZED=0`. Note that this is unsafe and is not recommended in production.

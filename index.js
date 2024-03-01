@@ -21,9 +21,14 @@ if (!("POSTGRES_CONNECTION" in process.env)) {
 // POSTGRES CONNECTION
 const postgresConfig = { connectionString: process.env.POSTGRES_CONNECTION }
 
-if (process.env.SSL_ROOT_CERT_PATH) {
-  const ca = fs.readFileSync(process.env.SSL_ROOT_CERT_PATH).toString()
-  postgresConfig.ssl = { ca }
+if (process.env.SSL_ROOT_CERT) {
+  postgresConfig.ssl = {
+    ca: process.env.SSL_ROOT_CERT
+  }
+} else if (process.env.SSL_ROOT_CERT_PATH) {
+  postgresConfig.ssl = {
+    ca: fs.readFileSync(process.env.SSL_ROOT_CERT_PATH).toString()
+  }
 }
 
 fastify.register(require('@fastify/postgres'), postgresConfig)

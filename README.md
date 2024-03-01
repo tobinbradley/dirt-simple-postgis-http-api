@@ -52,7 +52,8 @@ This is the complete complete list of environmental variables that can be set.
 | CACHE_EXPIRESIN | No | 3600 | [Max age in seconds](https://github.com/fastify/fastify-caching) |
 | CACHE_SERVERCACHE | No | undefined | Max age in seconds for [shared cache](https://github.com/fastify/fastify-caching) (i.e. CDN) |
 | RATE_MAX | No | undefined | Requests per minute [rate limiter](https://github.com/fastify/fastify-rate-limit) (limiter not used if RATE_LIMIT not set)  |
-| SSL_ROOT_CERT_PATH | No | undefined | Path to a CA certificate if using TLS/SSL |
+| SSL_ROOT_CERT | No | undefined | Contents of a CA certificate for connecting over SSL. Use this if you need to store the entire certificate in an environment variable, e.g. for Docker. |
+| SSL_ROOT_CERT_PATH | No | undefined | Path to a CA certificate file for connecting over SSL. Note that setting `SSL_ROOT_CERT` overrides this. |
 
 
 ### Step 3: fire it up!
@@ -162,5 +163,11 @@ no pg_hba.conf entry for host <host>, user <user>, database <database>, no encry
 ```
 
 you may need to connect to your server over SSL. Obtain a CA certificate and set `SSL_ROOT_CERT_PATH=<path to the certificate>` in `.env`. If you're still getting an error, check the end of your connection string for `?sslmode=require` and try removing it. You should still be able to connect over SSL.
+
+If you're running Dirt on Docker, it may be easier to pass the contents of the certificate with `SSL_ROOT_CERT`. Example:
+
+```bash
+docker run -dp 3000:3000 -e POSTGRES_CONNECTION=<connection string> -e SSL_ROOT_CERT=$(cat ca.crt) dirt
+```
 
 If you can't get a certificate or want to bypass the error, you can try setting `NODE_TLS_REJECT_UNAUTHORIZED=0`. Note that this is unsafe and is not recommended in production.

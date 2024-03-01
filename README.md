@@ -161,6 +161,6 @@ If you see an error like
 no pg_hba.conf entry for host <host>, user <user>, database <database>, no encryption
 ```
 
-you made need to connect to your server over SSL. Obtain a CA certificate and set `SSL_ROOT_CERT_PATH=<path to the certificate>` in `.env`.
+you made need to connect to your server over SSL. Obtain a CA certificate and set `SSL_ROOT_CERT_PATH=<path to the certificate>` in `.env`. If you're still getting an error, check the end of your connection string for `?sslmode=require` and try removing it. You should still be able to connect over SSL.
 
 If you can't get a certificate or want to bypass the error, you can try setting `NODE_TLS_REJECT_UNAUTHORIZED=0`. Note that this is unsafe and is not recommended in production.

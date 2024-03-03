@@ -1,3 +1,4 @@
+const fs = require('fs')
 const path = require('path')
 require("dotenv").config()
 
@@ -18,9 +19,19 @@ if (!("POSTGRES_CONNECTION" in process.env)) {
 }
 
 // POSTGRES CONNECTION
-fastify.register(require('@fastify/postgres'), {
-  connectionString: process.env.POSTGRES_CONNECTION
-})
+const postgresConfig = { connectionString: process.env.POSTGRES_CONNECTION }
+
+if (process.env.SSL_ROOT_CERT) {
+  postgresConfig.ssl = {
+    ca: process.env.SSL_ROOT_CERT
+  }
+} else if (process.env.SSL_ROOT_CERT_PATH) {
+  postgresConfig.ssl = {
+    ca: fs.readFileSync(process.env.SSL_ROOT_CERT_PATH).toString()
+  }
+}
+
+fastify.register(require('@fastify/postgres'), postgresConfig)
 
 // COMPRESSION
 // add x-protobuf

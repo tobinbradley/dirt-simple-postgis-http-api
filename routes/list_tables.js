@@ -12,8 +12,12 @@ const sql = (params, query) => {
     information_schema.tables i
   LEFT JOIN geometry_columns g
   ON i.table_name = g.f_table_name
+  INNER JOIN information_schema.table_privileges p
+  ON i.table_name = p.table_name
+  AND p.grantee in (current_user, 'PUBLIC')
+  AND p.privilege_type = 'SELECT'
   WHERE
-    i.table_schema not in  ('pg_catalog', 'information_schema')
+  i.table_schema not in  ('pg_catalog', 'information_schema')
 
     -- Optional where filter
     ${query.filter ? `and ${query.filter}` : '' }
